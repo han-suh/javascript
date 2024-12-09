@@ -1,0 +1,15 @@
+
+[
+    {
+        "name":  "나",
+        "id": "i",
+        "age": 20,
+        "married": false
+    },
+    {
+         "name":  "너",
+         "id":  "you",
+         "age": 30,
+         "married": true
+        }
+]

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>노드개체 생성과 일정관리 어플</title>
+</head>
+<body>
+    <h1>노드개체 생성과 일정관리 어플</h1>
+    <div id="cont"></div>
+    <h2>innerText, innerHTML write()</h2>
+    <ul>
+        <li>innerText : 특정 요소에 문자열로 작성한 필드를 텍스트 노드로 변경해서 추가</li>
+        <li>innerHTML : 특정 요소에 문자열로 작성한 필드를 분석해서 요소 개체와 텍스트 노드로 변경해서 추가</li>
+        <li>write : write를 실행한 위치에서 문자열로 작성된 필드를 분석해서 요소 개체와 텍스트 노드로 변경해서 추가</li>
+        <li>innerHTML : 연산속도가 느리다. 개체를 직접 만들어서 추가하는 것보다 제한이 많다.(앞 뒤로 못 붙인다). append, prepend 등 안된다.</li>
+    </ul>
+    <h2>노드 개체를 직접 만들어서 추가하기</h2>
+    <ul>
+        <li>document.creatElement("tag이름"); return 노드개체</li>
+        <li>document.creatTextNode("문자열"); return 텍스트개체</li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <h2>노드개체를 기준으로 특정 위치에 다른 노드를 추가하기</h2>
+    <ul>
+        <li>node.append(insertNode) : node 자식의 맨 뒤에 insertNode를 추가</li>
+        <li>node.prepend(insertNode) : node 자식의 맨 앞에 insertNode를 추가</li>
+        <li>node.before(insertNode) : node의 형제로 바로 앞에 insertNode를 추가</li>
+        <li>node.after(insertNode) : node의 형제로 바로 뒤에 insertNode를 추가</li>
+        <li>node.replaceWith(insertNode) : node 전부를 insertNode 개체로 전환</li>
+
+        <li>node.innerHTML="문자열html" : node의 자식 전부를.. 문자열html을 개체로 만들어서 전환</li>
+        <li>document.write("문자열html") : write 함수가 실행된 위치에 문자열html을 개체로 만들어서 추가</li>
+
+        <li>insertAdjacentHTML("afterend"."문자열html") : ==append(); 문자열html을 개체로 만들어서 자식의 맨 뒤에 추가</li>
+        <li>insertAdjacentHTML("afterbegin"."문자열html") : ==prepend(); 문자열html을 개체로 만들어서 자식의 맨 앞에 추가</li>
+        <li>insertAdjacentHTML("beforebegin"."문자열html") : ==before(); 문자열html을 개체로 만들어서 형제로 바로 앞에 추가</li>
+        <li>insertAdjacentHTML("afterend"."문자열html") : ==after(); 문자열html을 개체로 만들어서 형제로 바로 뒤에 추가</li> <!-- 사용을 권장하지 않음 -->
+    </ul>
+
+    <script>
+        let i=document.createElement("i");
+        i.innerText="나는 추가되는 노드"
+        // innerText는 innerHTML만큼 렌더링에 무리를 주진 않는다.
+    </script>
+
+    <h2>실습</h2>
+    <p>
+        <button onclick="container.before(i)">before()테스트</button><!-- 나의 형제의 앞에 추가 -->
+        <!-- i가 하나여서 버튼을 누르면 사라진다.. -->
+        <button onclick="container.after(i)"> <!-- onclick에서 container가 아래에 있어서 찾을 수 있는지 확인 "console.log(container)"-->
+        <!-- 나의 형제의 뒤에 추가 -->after()테스트</button>
+        <button onclick="container.prepend(i)">prepend()테스트</button> <!-- 자식의 앞에 추가 -->
+        <button onclick="container.append(i)">append()테스트</button> <!-- 자식의 뒤에 추가 -->
+        <button onclick="container.replaceWith(i)">replaceWith()테스트</button> <!-- 나 자신이 바뀜 -->
+        <button onclick="container.innerHTML='<i>나야~'">innerHTML테스트</button> <!-- 자식을 싹 다 바뀜 -->
+
+        
+    </p>
+    <hr>
+    <div id="container" style="border: 1px solid">
+        <strong>
+            나는 상자
+        </strong>
+    </div>
+    <hr>
+
+
+    <script>
+        const cont=document.getElementById("cont");
+        cont.innerText="<i>텍스트 노드"; // 특정 위치에 출력    // 텍스트 노드
+        // 텍스트만 출력 가능. <i> 등 요소 출력 불가
+        cont.innerHTML="<i>요소가 포함된 텍스트 노드"; // 특정 위치 출력    // 텍스트 노드
+        // <i> 등 요소 출력 가능    // innerText가 있는 채로 출력 불가능.. 다바꿔버림
+        // innerText 출력 방법 : cont.innerHTML+="<i>요소가 포함된 텍스트 노드";(앞)
+        //                    : cont.innerHTML="<i>요소가 포함된 텍스트 노드"+cont.innerHTML;(뒤)
+
+        
+        const strong=document.createElement("strong");
+        let id=document.createAttribute("id");
+        id.value="hello";
+        let txtNode=document.createTextNode("안녕~");
+        console.log(strong,id,txtNode);
+        // strong에 text 노드에 추가하려면 나를 기준으로 어느 위치에 추가할건지 명시해야한다.
+        strong.append(txtNode);
+        console.log(strong);
+        strong.setAttributeNode(id,""); // 나 스스로에게 id 지정 - "id" or id,""    //만들어진 속성개체를 추가 - id의 값이 없기에 추가해줘야 함.
+        strong.setAttribute("style", "color:red") // 문자열로 개체 생성
+        
+        /*    
+        document.write("<h2>안녕~</h2>"); //현재 나의 위치에 출력
+        let strong=document.createElement("strong"); // 특정 태그 만들기   // 텍스트를 요소로 
+        let txt=document.createTextNode("곧 12월") // 텍스트 노드 만들기   // 텍스트를 객체로
+        console.log(strong); // strong의 태그가 출력
+        strong.append(txt) // append : (나의 뒤 쪽에)집어넣겠다.
+        cont.prepend(strong) // prepend : (나의 앞 쪽에)집어넣겠다.
+
+
+        // innerHTML의 내용만 바꾸려고 하는게 안됨
+        // innerHTML의 문제점 : 선택한 요소의 자식을 모두 다른 것으로 바꾼다.(장점이자 단점)*/
+
+    </script>
+
+    <h2>일정 관리 어플</h2>
+    <hr>
+    <ul id="appUl"></ul>
+    <hr>
+    <form name="appForm" action="#"> <!-- #: 내부에 아이디가 있으면 이동하겠다 -->
+        <p>
+            <label>
+                시간
+                <input type="time" name="time">
+                <!-- date: 날짜 / datetime-local: 날짜와 시간 / time: 시간 -->
+            </label>
+            <label>
+                일정
+                <input type="text" name="content" value="양치하기">
+            </label>
+            <button type="submit">등록</button>
+        </p>
+    </form>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <script>
+        // 2. appUl 정의해서 찾기
+        const appUl=document.getElementById("appUl")
+        console.log(appUl);
+
+        // 1. appForm 정의해서 찾기
+        const appForm=document.forms.appForm
+        console.log(appForm);
+
+        // 4. 일정에서 중복을 확인하기 위해서 일정을...
+        const appObj={}//1120:"퇴근",800:"점심",450:"출근",1320:"잠"}
+        // (시간:분)표시  1840:"퇴근",1320:"점심",750:"출근",2200:"퇴근"
+        // const appObj={"13:3":"운전","7:50":"양치"} // - 문자열도 정렬되나 문자열키를 사용하면 정렬이 안된다.
+        // 일정앱에서 일정을 시간 순서대로 출력하기 위해서 time을 수로 바꿔서 저장
+        // ex) 3:19 => (3*60)+19=199    7:30 => (7*60)+30=450
+        // 저장과 반대로 출력할 때는 450/60 => 7시(몫) 30분(나머지)
+        // Number.floor(450/60) = 7시    450%60 = 30분
+        // const appObj={750:"양치",133:"운전"} //출력 - {133: '운전', 750: '양치'} : js가 정렬을 해버림
+        console.log(appObj);
+
+        // 9. 시간을 숫자로 받은걸(key) 다시 시간으로 반환하기 - 함수
+        const strTime=function(time){//time == 450
+            let h=Math.floor(time/60);
+            let m=time%60;
+            return h+"시 "+m+"분";
+            // 7:30 으로 반환 => 시와 분을 따로
+            // 00분으로 하고자 하면 if문으로 물어서 출력해야함
+        }
+
+        // 11. submit으로 받을 시간을 숫자로 정리하는 함수 선언
+        const numTime=function(strTime){ //07:30
+            // "07:30".split(":"); => ["07","30"]
+            // console.log(strTime.split(":"));
+            let arr=(strTime.split(":")) // 문자열로 나누기 
+            return Number(arr[0])*60+Number(arr[1]);
+            // 7*60+30 으로 반환 => 시와 분을 따로
+            // Number("07")*60+Number("30");
+        }
+
+
+        // 5. 프린트하기! - 함수
+        const printAppObj=function(){
+            // 14. 이중출력 방시
+            appUl.innerHTML=""; //자식 노드를 모두 삭제
+
+        function delLi(event){
+            //console.log("ddd");
+            //console.dir(event.target.parentElement.innerText);
+            // console.log(event.target.parentElement.innerText);
+            const li=event.target.parentElement;
+            li.remove();
+        }
+            
+
+            // Object key는 Set type으로 배열과 유사해서 Iterator가 존재한다.
+            // 배열과 차이점은 Set은 중복을 허용하지 않는다.
+            for(let key in appObj){ // object의 반복문   // [1120,800,450,1320]Set (배열X)
+                // console.log(key,appObj[key]); //appObj[key] => key가 문자열이라서 []로 참조해야함.
+            
+                //6. 출력할 li 선언
+                let li=document.createElement("li");
+                let b=document.createElement("b");
+                let span=document.createElement("span");
+
+                // 삭제버튼 구현
+                const btn=document.createElement("button")
+                btn.innerText="삭제"
+                //console.log(btn);
+                btn.addEventListener("click",delLi);
+
+                // 7.시간과 일정을 선언했는데 어떤 값을 넣을지
+                b.innerText=strTime(key)+" "; // 10. strTime의 키로 변환 key => strTime(key)
+                span.innerText=appObj[key];
+
+                // 8. 출력할 위치 조정
+                li.append(b);
+                li.append(span);
+                appUl.append(li);
+                li.append(btn);
+
+            }
+        }
+        printAppObj(); 
+
+      
+        
+
+        // 3. onsubmit 재정의하기
+        appForm.onsubmit=function(e){
+            e.preventDefault();
+
+            // 12. submit으로 받을 시간을 숫자로 변환한걸 onsubmit할 때 출력하기
+            let time=this.time.value; // "07:30"
+            let content=this.content.value;
+            time=numTime(time); //"450"
+            console.log(time);
+
+            // 15. 같은 시간대 등록할 때 확인 안내문
+            if(time in appObj){
+                let result=confirm("이미 등록된 일정이 있습니다. 바꾸시겠습니까?")
+                if(result){ //result가 true. 일정 변경. 
+                    appObj[time]=content;
+                }
+            }else{// 일정이 없으면 바로 등록
+                appObj[time]=content;
+                
+            }
+
+
+
+            // 13. 출력하기
+            appObj[time]=content;
+            printAppObj(); // 같은 내용들이 다시 출력되고 있음..
+
+            // 삭제 구현!
+            
+        }
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+/*        
+        // 3. onsubmit 재정의하기
+        appForm.onsubmit=function(e){
+            e.preventDefault();
+
+            // 4. 시간과 일정을 onsubmit했을 때 출력하기 위해서 선언하기
+            let time=this.time.value // input은 value가 있음
+            let content=this.content.value
+            console.log(time,content);
+
+            // 5. onsubmit했을 때 일정을 넣을 곳 선언하기
+            let li=document.createElement("li");
+            let b=document.createElement("b");
+            let span=document.createElement("span");
+            console.log(li,b,span);
+            
+            //  6. 시간과 일정을 선언했는데 어떤 값을 넣을지
+            b.innerText=time+" : ";
+            span.innerText=content;
+
+            // 7. 출력할 위치 조정
+            li.append(b);
+            li.append(span);
+            appUl.append(li)
+
+            
+        }
+        */
+
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>input 요소</title>
+</head>
+<body>
+    <h1>input 요소</h1>
+    <!-- action : 양식을 제출할 위치 -->
+    <form action="#" id="formTest">
+        <p>
+            <label>
+                a:
+                <input id="aInput" type="text" value="77">
+            </label>
+        </p>
+        <p>
+            <label>
+                b:
+                <input id="bInput" type="text" value="33">
+            </label>
+        </p>
+        <p>
+            <button>제출</button>
+        </p>
+        <!-- 하나일 때는 enter로 가능했으나 2개 이상일 때는 제출 버튼 필요 -->
+    </form>
+    
+    <script>
+        console.log(formTest);
+        
+        // formTest.onsubmit=function(){
+            // alert("제출했나요?")
+        // }
+        // formTest에서 enter를 입력해서 제출하면 내가 정의한 함수 실행해라! (함수를 재정의한다.)
+
+        formTest.onsubmit=function(){
+            console.log(aInput.value, bInput.value);
+            // alert(aInput.value+bInput.value)// =>"7733" (입력출력 모두 문자열로)
+            // 보통 프로그래밍 언어는 문자열을 수로 형변환하는 함수를 지원한다.
+            // alert(Number(aInput.value)+Number(bInput.value));
+
+            // 개발자들은 자주 사용하는 것을 변수에 참조 시켜서 사용
+            let a=Number(aInput.value);
+            let b=Number(bInput.value);
+            // a , b 변수
+            // let 변수를 선언한다!
+            // = : 참조(대입) 연산자(오른쪽의 값이나 객체를 왼쪽의 변수가 참조한다.)
+            alert((a*b)+"/"+(a+b)+"/"+(a/b))
+        }
+
+    </script>
+
+
+
+</body>
+</html>

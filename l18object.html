@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object의 리터럴 표기법과 참조하기</title>
+</head>
+<body>
+    <h1>Object의 리터럴 표기법(JSON)과 참조하기</h1>
+    <p>자바스크립트는 객체를 리터럴하게 표기하는 방법을 제공하고 있고 그 방법이 객체 명세서와 거의 동일하다.
+    </p>
+
+    <h2>Object의 리터럴 표기법</h2>
+    <ul>
+        <li>new Object() : {}</li>
+        <li>new Object().a="누구" : {a:"누구"}</li>
+        <!-- 하위접근자 -->
+        <li>new Object()["a"]="누구" : {"a":"누구"}</li>
+        <!-- 대괄호 하위접근자 / ["a"] 문자열로 받았을 때는 문자열로 -->
+        <li>new Object()[100]="누구" : {100:"누구"}</li>
+        <!-- [100] 숫자로 받았을 때는 숫자로 -->
+        <li>new Object().add=function(a,b){} : {add(a,b){}}</li>
+        <!-- 함수 -->
+        <li>new Object().add=function(a,b){} : {add : function(a,b){}}</li>
+        <li>{"C":1,"B":2,"A":3} 선언하면 => 필드명으로 정렬 안됨</li>
+        <!-- 아스키코드표에서 A가 앞번호이지만 -->
+        <li>{100:1,40:2,30:3} 선언하면 => {30:3,40:2,100:1} 숫자 필드명을 정렬한다.</li>
+    </ul>
+
+    <h2>동등비교연산이 기본형데이터와 자료형을 비교할 때 생기는 일</h2>
+    <ul>
+        <li>자료형에서 [Symbol.toPrimitive] 함수가 존재하면 실행해서 반환받는 값과 기본형데이터를 비교한다. :new Number(55)==55 => new Number(55)["Symbol.toPrimitive"] == 55 </li>
+        <li>자료형에서 [Symbol.toPrimitive] 함수가 없으면 무조건 false다.</li>
+    </ul>
+
+    <script>
+        let objTest={"C":1,"B":2,"A":3}
+        console.log(objTest);
+        let objTest2={100:1,40:2,30:3}
+        console.log(objTest2);
+        
+        
+        // ==(값을 비교하는 연산) 동등비교연산은 자료형의 PrimitiveValue를 기본형과 비교
+        console.log(new Number(55),55,new Number(55)==55); // 자료형과 기본형  true
+        console.log(new String("안녕"),"안녕",new String("안녕")=="안녕"); 
+        console.log(new Boolean(1==1),1==1,);
+
+
+        class A{
+            constructor(){
+                this.a=10;
+                this.b=20;
+                this.c=30;
+                //this.100=40; X
+                //this.1a=10; X
+                this[100]=40; // " . ","[숫자 가능]" : 하위필드 접근자
+                // [] : Array가 index를 참조하는 접근자 (다른 언어에서는 배열에서만 사용)
+                //언어가 유연할수록(시적이다)...사람과 가까움 => 하이레벨언어
+            }
+        }
+        console.log(new A()); // A {a: 10, b: 20, c: 30} : 객체의 리터럴한 표기(출력)  - type이 A
+        // 리터럴 : 눈에 보이는 그대로 
+
+        let objA={a:10,"b":20,"c":30, 100:40, 20:50} // 객체의 리터럴한 선언법  // {20: 50, 100: 40, a: 10, b: 20, c: 30}
+        console.log(objA); // {a: 10, b: 20, c: 30} (Object) - type이 Object
+        // *** 다른 프로그래밍에서 모든 객체의 필드는 필드명으로 순서를 정하지 않는다.(js는 X)
+        // *** 다른 프로그래밍에서 모든 객체의 필드는 숫자로된 필드명을 사용할 수 없다.(js는 X)
+        // => 일반적으로 객체의 필드명은 순서가 없고 숫자를 정의할 수 없다. 오직 js만 가능하다.
+
+        let objB=new Object();
+        objB.a=10;
+        objB.b=20;
+        objB["b"]=20;
+        // objB[c]=30; X
+        let key="c";
+        objB["c"]=30;
+        objB[100]=40;
+        console.log(objB); // {a: 10, b: 20, c: 30}
+        // {100: 40, a: 10, b: 20, c: 30}
+
+        // 문제1.objB 필드 c의 값을 60으로 바꾸세요
+        // 문제2.objB 필드 100의 값을 1 증가 시키세요
+        // 문제3. 리터럴 표기법으로 name, age, job 필드가 있는 객체를 생성하세요.
+
+        objB.c=60;
+        console.log(objB);
+        objB[100]=40;
+        
+        
+
+        // 100의 기본값을 갖는 자료형
+        let primiObj={
+            [Symbol.toPrimitive](hint){
+                return 100
+            }
+        }
+        // == new Number(100) (같은 척 만든 것)
+        console.log(primiObj);
+        console.log(primiObj==100);  // true
+        console.log(new Number(100));
+
+
+
+
+
+
+    </script>
+    
+</body>
+</html>

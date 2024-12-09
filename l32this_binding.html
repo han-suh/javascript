@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>함수의 this binding에 대해 알아봅시다.</title>
+</head>
+<body>
+    <h1>함수의 this binding에 대해 알아봅시다.</h1>
+    <p></p>
+
+    <h2>this 바인딩의 예시</h2>
+    <ul>
+        <li><button id="btn1">this 바인딩</button></li>
+        <li><button id="btn2">this 바인딩 실패</button></li>
+        <li></li>
+        <li></li>
+    </ul>
+
+    <script>
+        class User{
+            constructor(id,n){
+                this.id=id;
+                this.n=n;
+                this.hello2=()=>{
+                    console.log(this.id+"아 안녕");
+                }// == sayHello=()=>{}
+                // this.hello=function; == hello=function(){}
+            }
+            hello=function(){
+                console.log(this.n+"안녕");
+            }
+            sayHello=()=>{
+                console.log(this.n+"야 안녕");
+                // 클래스 내부에서 작성하면 this를 클래스로 생성하는 객체의 필드로 바인딩해준다.(비정상적. 안되는걸 해준 것)
+            }
+        }
+        const user=new User("qwerqwer","누구");
+        user.hello();
+        user.hello2();
+        user.sayHello();
+        user.hello=()=>{
+            console.log(this.n+"잘가!!"); // undefined잘가!! 출력
+        } // this가 user 객체를 참조하지 못한다.(정상)
+        user.hello(); // window 출력
+        console.log(user);
+
+
+        // 타입으로 지정된 함수에서 this가 바인딩 되었나?
+        // 바인딩됨 : 객체를 this로 참조하는 것
+        // 바인딩안됨 : 해당 객체를 뛰어넘어 그 부모객체를 참조 => 화살표함수(프로토타입이 없기 때문에)에 this를 쓰는 순간 그 함수(블럭) 바로 밖의 객체 또는 타입(부모객체)을 this로 참조
+        function Member(id,n){
+            this.id=id;
+            this.n=n;
+            this.hello=function(){
+                console.log(this.n+"야 안녕!!!"); 
+            }
+            this.hello2=()=>{
+                console.log(this.n+"야 안녕");
+            }
+        }
+        console.log("#####################################");
+        const mem=new Member("abc","자바")
+        mem.hello();
+        mem.hello2();
+
+        mem.hello=function(){
+            console.log(this.id+"야 안녕"); // "abc야 안녕"
+        }.bind(user); //qwerqwer야 안녕
+        // 익명함수에 user를 this로 하는 새로운 함수를 만들어서 hello에 참조시키겠다.
+        mem.hello2=()=>{
+            console.log(this.id+"야! 안녕"); // "undefined야! 안녕"
+        }//.bind(mem);
+        // 밖에서 선언하면 바인딩되지 않음
+        // bind()는 Object.prototype 함수이기 때문에 프로토타입이 있는 화살표함수는 사용할 수 없다.
+        mem.hello();
+        mem.hello2();
+
+        btn1.onclick=function(){
+            console.log(this); // this=btn1
+            this.style.backgroundColor="blue"
+        }
+
+        btn2.onclick=()=>{
+            console.log(this); // this=window
+            this.style.backgroundColor="red"
+            // window.style == undefined
+            // undefined.backgroundColor => 오류
+        }
+
+
+
+/*
+        // 모든 태그는 렌더링되면서 객체로 저장된다.
+        // 이때 id로 변수명이 등록된다.
+        console.log(btn1);
+        // 버튼 객체에 있는 필드 onclick을 함수로 재정의 ==> 마우스를 누를 때마다 호출되는 콜백함수가 된다.
+        btn1.onclick=function(){
+            console.log("btn1 눌림!!");
+            console.log(this); // btn1의 this : this가 객체를 바인딩했다.
+            this.style.backgroundColor="red" // 요소에 직접 스타일 지정(우선순위가 가장 높다. 요소(js)>내부>외부)
+        }
+        
+        // btn2.onclick=function(){
+        //     console.log("btn2 눌림!!");     
+        // }
+
+        // btn2.onclick=()=>{//프로토타입이 없는 함수 => this가 없다.
+        //     console.log("btn2 눌림!!");
+        //     this.style.backgroundColor="blue"
+        //     // this=window => (unbinding) btn2 객체의 함수가 this를 참조하지 못하고 그 바로 위에(포함하는) 있는 객체(브라우저)를 참조한다.
+        // }
+
+        const btn2EventHandler=function(){
+            console.log("btn2 눌림!!");
+            console.log(this); // window
+            this.style.backgroundColor="blue"
+        }
+        const btn1EventHandler=btn2EventHandler.bind(btn1) //this를 btn1으로 하겠다.
+        // 바인딩하면 새로운함수를 반환
+        //btn1EventHandler(); // onclick 안하고 실행
+
+        btn2.onclick=btn1EventHandler;
+        
+        */
+
+
+    </script>
+</body>
+</html>

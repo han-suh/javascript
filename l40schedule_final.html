@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일정 관리 어플</title>
+    <style>
+        #appUl>li{
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <h1>일정 관리 어플</h1>
+
+    <hr>
+    <ul id="appUl">
+        <li id="appLiEx"> <!-- 8. 입력한 걸 위치에 삽입하는 방법 -->
+            <div >
+                <b class="time"></b>
+                <span class="content"></span>    
+            </div>
+            <button class="delBtn">X</button>
+        </li>
+    </ul>
+    <hr>
+    <form name="appForm" action="#"> <!-- #: 내부에 아이디가 있으면 이동하겠다 -->
+        <p>
+            <label>
+                시간
+                <input type="time" name="time">
+                <!-- 24시간제로 표시 -->
+            </label>
+            <label>
+                일정
+                <input type="text" name="content" value="양치하기">
+            </label>
+            <button type="submit">등록</button>
+        </p>
+    </form>
+    <p>
+        <button id="printScheduleBtn">일정출력</button>
+    </p>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <script>
+        // 1. 
+        const printScheduleBtn=document.getElementById("printScheduleBtn");
+        const appUl=document.getElementById("appUl");
+        const appLiEx=document.getElementById("appLiEx");
+
+        const appForm=document.forms["appForm"];
+
+        // 2. 
+        const schedule={
+            400:"일어나기",460:"출근하기",560:"수업시작",800:"점심먹기",1100:"퇴근하기",1180:"저녁식사",1320:"잠자기"
+        }
+
+        // 5. 자주 사용할 것 분리(함수)
+        const strTime=(key)=>{// 함수 사용에 key가 필요하기에 입력해주기
+            return `${Math.floor(key/60)}시 ${key%60}분`;
+        }
+
+        // 14. 코드가 길어서 함수로 정의 
+        const minTime=(time)=>{
+            let arr=time.split(":");
+            let hour=Number(arr[0]);
+            let min=Number(arr[1]);
+            return hour*60+min;
+        }
+
+        
+
+        // 3. 
+        const printSchedule=()=>{//click 이벤트 재정의를 위한 함수
+            // alert("나") - 5. 연결 잘했는지 확인하기!!!
+            /*
+            // 1)innerHTML 으로 구현하는 방법(렌더링이 느리다)
+            let str="";
+            for(let key in schedule){ // in - schedule(object)안에 key가 있는지 확인하는 반복문
+                console.log(key, schedule[key]); // schedule 출력되는지 확인 
+                str+=
+                `<li>
+                    <b>${strTime(key)}</b>
+                    <span>${schedule[key]}</span>
+                </li>`;
+            }
+            // <b>${Math.floor(key/60)}시 ${key%60}분</b> => 함수로 표현 가능!!!
+            appUl.innerHTML=str; */
+
+            /*
+            // 2) innerHTML, innerText 말고 다른 방법
+            // 7. 중복 방지
+            appUl.innerHTML="";
+
+            // 6. 반복문으로 내용 입력
+            for(let key in schedule){
+                let li=document.createElement("li");
+                let b=document.createElement("b");
+                let span=document.createElement("span");
+                let timeStr=document.createTextNode(strTime(key));
+                let contents=document.createTextNode(schedule[key]);
+                b.append(timeStr);
+                span.append(contents);
+                li.append(b);
+                li.append(span);
+                appUl.append(li);
+            } */
+
+            // 9. 새로 정의 => 숫자만큼 복사됨(schedule에 있는 내용 개수)
+            console.log(appLiEx);
+
+            // 11. 중복 방지
+            appUl.innerHTML="";
+
+            for(let key in schedule){
+                let li=appLiEx.cloneNode(true); // cloneNode(true)이면 자식 복사 불가능
+                // deep clone 자식노드를 포함해서 복사
+                li.removeAttribute("id"); // 속성지우기 => li의 id를 지움...
+
+
+                // 10. 넣을 내용 정의
+                let timeStr=document.createTextNode(strTime(key));
+                let contents=document.createTextNode(schedule[key]);
+                let b=li.querySelector(".time");
+                let span=li.querySelector(".content");
+                let delBtn=li.querySelector(".delBtn")
+                b.append(timeStr);
+                span.append(contents);
+                appUl.append(li);
+                // console.log(li);
+
+                // 17. 삭제 기능 함수
+                delBtn.onclick=(e)=>{
+                    // 1)) li.remove(); // 나를 포함한 자식 노드개체 삭제
+                    // li.removeChild(); //자식 노드개체만 삭제
+                    delete schedule[key]; // 특정 key를 삭제하는 연산자 // 2))
+                    printSchedule();  // 3))
+                    // 1)) + 2)) or 2)) + 3)) 사용하면 됨.
+                }
+                
+
+
+            }
+        }
+
+        // 4. onclick 재정의
+        printScheduleBtn.onclick=printSchedule;
+
+        // 12. 등록버튼으로 내용 추가하기 위해 멈추기
+        appFormSubmitHandler=(e)=>{
+            e.preventDefault();
+            // 화살표함수여서 this는 window
+            // e.target==appForm
+            let time=minTime(appForm.time.value);
+            let content=appForm.content.value;
+            console.log(time,content);
+            // console.log(time.split(":")); // === new String(time.splite(":"))
+            // : 을 기준으로 문자열로 변경 => "11:25" -> ["11","25"]
+
+            // 18. 중복 넣지 않기
+            if(time in schedule){
+                let result=confirm("등록된 일정을 바꾸시겠습니까?")
+                if(result){
+                    schedule[time]=content;
+                    printSchedule();
+                }
+            }else{
+                schedule[time]=content;
+                printSchedule();
+            }
+/*
+            // 16. 등록버튼으로 출력하기
+            console.log(minTime(time));
+            schedule[time]=content;
+            printSchedule(); */
+        }
+
+        // 13. 등록버튼 핸들러 만들기
+        appForm.onsubmit=appFormSubmitHandler
+
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>참과 거짓의 boole</title>
+</head>
+<body>
+    <h1>참과 거짓의 boolean true(1) false(0) : 비트정보</h1>
+    <!-- 저장소에 실제로 0, 1(1bit)로 저장되지는 않음 -->
+    <p>비교연산의 결과로 boole 데이터를 반환한다.</p>
+
+    <script>
+        console.log(true,typeof true);
+        console.log(false,typeof false);
+        console.log(1==1.0); // true // == : 비교연산
+        console.log(2==1); // false
+
+        let now=new Date(); //(시간을 나타내는)객체 자료형 : . 필드를 참조할 수 있으면 자료형(참조형==자료형)
+        console.log(now.toLocaleDateString(), now.getMilliseconds()); // 2024. 11. 6.
+        // toLocaleDateString 함수여서 ()
+        let now2=new Date();
+        console.log(now2.toLocaleDateString(), now2.getMilliseconds()); // 2024. 11. 6.
+        console.log(now==now2); // false // 객체를 비교할 수는 있지만 적절한 방법은 아니다.
+        // 자료형은 같다고 비교하기에 비교할 대상이 너무 많다.(같다고 할 기준이 없다.)
+        // 일란성 쌍둥이 ==> 유전자(Date)가 같지만 다른 사람 now == now2 (X)
+        // 기본형(값) 11==11(O)
+        // 0000 1011
+        // 0000 1011 ==> 완전히 같음
+        console.log(now!=now2); // true
+        console.log(now>now2); // false - 비교 불가
+        console.log("경민">"경현"); // false - 비교 불가
+        // 객체는 > < >= <= 크기 비교를 할 수 없다 --> false
+        console.log(13>12, 13>=12, 13<12, 13<=12); // true true false false
+
+        console.log(!true, !false); //false true // ! : boolean의 Not 연산
+        console.log(~false); // 00000000 -> 11111111  => -1
+        console.log(~true);  // 00000001 -> 11111110  => -2
+        
+        console.log("1==true", 1==true); // true
+        console.log("0==false", 0==false); // true
+        console.log("true+true", true+true); // 2
+        console.log("false+false", false+false); // 0
+        console.log("true*false", true*false); // 0
+        // 개발자는 boole를 수로 많이 작성한다.
+
+        // 자바스크립트에는 없다라는 상태와 공간은 있는데 데이터가 없는 것이 존재
+        // undefined : let a; 아무것도 정의되지 않은 상태(완전 없는 것)
+        // null : a=null; 비어있는 상태를 표시(표에서 셀 한 칸이 빈 상태)
+        
+        // 0 : 00000000 아무런 데이터도 없는 수 number
+        //  "" : 아무런 글자도 없는 것 string
+        // [] : 아무런 데이터도 없는 것(배열) list
+
+        // false == 0   // 존재하지 않음을 표현 == false
+        console.log("undefined", Boolean(undefined)); // false
+        console.log("null", Boolean(null)); // false
+        console.log("0", Boolean(0)); // false
+        console.log("", Boolean("")); // false
+
+        // 존재하는 것 == true
+        console.log("[]", Boolean([])); // true  // 필드가 많이 존재하는 객체
+
+        console.log("1", Boolean(1)); // true
+        console.log("-1", Boolean(-1)); // true
+        console.log(" ", Boolean(" ")); // true  // 공백도 문자열
+
+        
+        
+
+        
+
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+    </script>
+
+</body>
+</html>

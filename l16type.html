@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>타입과 객체 생성</title>
+</head>
+<body>
+    <h1>타입과 객체 생성</h1>
+
+
+    <script>
+        // new방식(선수학습)        old방식(오리지널)
+        // type==class
+        class NameName{ // 객체의 타입이 될 이름이기 때문에 대명사로 작성(파스칼 규칙)
+        }
+
+        console.log(Number,String); // 랩퍼클래스
+
+        class User{ // 사람이 될 type  // User라는 객체를 만들면 생성자가 생성
+            constructor(){ // __init__ (생성자 초기화.constructor)   // 생성자 : 모든 class가 갖는 함수
+                console.log("User 객체 만들어짐");
+                this.name="이름"
+                this.age="나이"
+                this.job="직업"
+                // this(self) : 필드(하위값) 접근자(나 자신) 
+            }
+        }
+        let u=new User(); // ==new User.constructor(); (이렇게 못함)   // 만든 타입을 객체로 만듦
+        // 객체를 만드는 법 : 꼭 new 연산자로 생성자를 호출해야한다.
+        
+        console.log(User); // User가 만들어짐 => 타입을 객체를 만들기 위한 설계도 => new User()해야 객체로 만들어지는 것
+        
+        console.log(u);
+        
+        let u2=new User();
+        // type을 명시하면 빠르게(호출만 해도) 자료형 데이터를 생성할 수 있다.
+        
+        console.log(u2);
+        // User {name: '이름', age: '나이', job: '직업'} == JSON (JavaScript Object Notation)
+        // 자바스크립트에서 사용하는 객체 명세서 : name 필드에 "이름", age 필드에 "나이", job 필드에 "직업"을 참조한다
+        
+        let arr=new Array(); // [] : 시퀀스가 있는 자료가 생성
+        // Array class를 생성해서 호출만 해도 시퀀스가 있는 자료를 빠르게 생성할 수 있다.
+
+        
+
+    </script>
+    
+</body>
+</html>

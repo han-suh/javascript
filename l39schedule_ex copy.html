@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>노드개체 생성과 일정관리 어플</title>
+</head>
+<body>
+    <h1>일정 관리 어플</h1>
+    <h2 id="monthDay">11월 28일</h2>
+    <hr>
+    <ul id="appUl"></ul>
+    <hr>
+    <form name="appForm" action="#"> <!-- #: 내부에 아이디가 있으면 이동하겠다 -->
+        <p>
+            <label>
+                시간
+                <input type="time" name="time">
+                <!-- date: 날짜 / datetime-local: 날짜와 시간 / time: 시간 -->
+            </label>
+            <label>
+                일정
+                <input type="text" name="content" value="양치하기">
+            </label>
+            <button type="submit">등록</button>
+        </p>
+    </form>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <script>
+        // ..1)달표시
+        const monthDay=document.getElementById("monthDay")
+
+        // 2. appUl 정의해서 찾기
+        const appUl=document.getElementById("appUl")
+        console.log(appUl);
+
+        // 1. appForm 정의해서 찾기
+        const appForm=document.forms.appForm
+        console.log(appForm);
+
+        // 4. 일정에서 중복을 확인하기 위해서 일정을...
+        const appObj={}//1120:"퇴근",800:"점심",450:"출근",1320:"잠"}
+        // (시간:분)표시  1840:"퇴근",1320:"점심",750:"출근",2200:"퇴근"
+        // const appObj={"13:3":"운전","7:50":"양치"} // - 문자열도 정렬되나 문자열키를 사용하면 정렬이 안된다.
+        // 일정앱에서 일정을 시간 순서대로 출력하기 위해서 time을 수로 바꿔서 저장
+        // ex) 3:19 => (3*60)+19=199    7:30 => (7*60)+30=450
+        // 저장과 반대로 출력할 때는 450/60 => 7시(몫) 30분(나머지)
+        // Number.floor(450/60) = 7시    450%60 = 30분
+        // const appObj={750:"양치",133:"운전"} //출력 - {133: '운전', 750: '양치'} : js가 정렬을 해버림
+        console.log(appObj);
+
+        // 9. 시간을 숫자로 받은걸(key) 다시 시간으로 반환하기 - 함수
+        const strTime=function(time){//time == 450
+            let h=Math.floor(time/60);
+            let m=time%60;
+            return h+"시 "+m+"분";
+            // 7:30 으로 반환 => 시와 분을 따로
+            // 00분으로 하고자 하면 if문으로 물어서 출력해야함
+        }
+
+        // 11. submit으로 받을 시간을 숫자로 정리하는 함수 선언
+        const numTime=function(strTime){ //07:30
+            // "07:30".split(":"); => ["07","30"]
+            // console.log(strTime.split(":"));
+            let arr=(strTime.split(":")) // 문자열로 나누기 
+            return Number(arr[0])*60+Number(arr[1]);
+            // 7*60+30 으로 반환 => 시와 분을 따로
+            // Number("07")*60+Number("30");
+        }
+
+
+        // 5. 프린트하기! - 함수
+        const printAppObj=function(){
+            // 14. 이중출력 방시
+            appUl.innerHTML=""; //자식 노드를 모두 삭제
+
+        function delLi(event){
+            //console.log("ddd");
+            //console.dir(event.target.parentElement.innerText);
+            // console.log(event.target.parentElement.innerText);
+            const li=event.target.parentElement;
+            li.remove();
+        }
+            
+
+            // Object key는 Set type으로 배열과 유사해서 Iterator가 존재한다.
+            // 배열과 차이점은 Set은 중복을 허용하지 않는다.
+            for(let key in appObj){ // object의 반복문   // [1120,800,450,1320]Set (배열X)
+                // console.log(key,appObj[key]); //appObj[key] => key가 문자열이라서 []로 참조해야함.
+            
+                //6. 출력할 li 선언
+                let li=document.createElement("li");
+                let b=document.createElement("b");
+                let span=document.createElement("span");
+
+                // 삭제버튼 구현
+                const btn=document.createElement("button")
+                btn.innerText="삭제"
+                //console.log(btn);
+                btn.addEventListener("click",delLi);
+
+                // 7.시간과 일정을 선언했는데 어떤 값을 넣을지
+                b.innerText=strTime(key)+" "; // 10. strTime의 키로 변환 key => strTime(key)
+                span.innerText=appObj[key];
+
+                // 8. 출력할 위치 조정
+                li.append(b);
+                li.append(span);
+                appUl.append(li);
+                li.append(btn);
+
+            }
+        }
+        printAppObj(); 
+
+      
+        
+
+        // 3. onsubmit 재정의하기
+        appForm.onsubmit=function(e){
+            e.preventDefault();
+
+            // 12. submit으로 받을 시간을 숫자로 변환한걸 onsubmit할 때 출력하기
+            let time=this.time.value; // "07:30"
+            let content=this.content.value;
+            time=numTime(time); //"450"
+            console.log(time);
+
+            // 15. 같은 시간대 등록할 때 확인 안내문
+            if(time in appObj){
+                let result=confirm("이미 등록된 일정이 있습니다. 바꾸시겠습니까?")
+                if(result){ //result가 true. 일정 변경. 
+                    appObj[time]=content;
+                }
+            }else{// 일정이 없으면 바로 등록
+                appObj[time]=content;
+                
+            }
+
+
+
+            // 13. 출력하기
+            appObj[time]=content;
+            printAppObj(); // 같은 내용들이 다시 출력되고 있음..
+
+            // 삭제 구현!
+            
+        }
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+/*        
+        // 3. onsubmit 재정의하기
+        appForm.onsubmit=function(e){
+            e.preventDefault();
+
+            // 4. 시간과 일정을 onsubmit했을 때 출력하기 위해서 선언하기
+            let time=this.time.value // input은 value가 있음
+            let content=this.content.value
+            console.log(time,content);
+
+            // 5. onsubmit했을 때 일정을 넣을 곳 선언하기
+            let li=document.createElement("li");
+            let b=document.createElement("b");
+            let span=document.createElement("span");
+            console.log(li,b,span);
+            
+            //  6. 시간과 일정을 선언했는데 어떤 값을 넣을지
+            b.innerText=time+" : ";
+            span.innerText=content;
+
+            // 7. 출력할 위치 조정
+            li.append(b);
+            li.append(span);
+            appUl.append(li)
+
+            
+        }
+        */
+
+    </script>
+    
+</body>
+</html>

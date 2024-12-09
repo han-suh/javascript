@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>논리 연산자로 복잡한 제어문을 작성할 수 있게하자</title>
+</head>
+<body>
+    <h1>논리 연산자로 복잡한 제어문을 작성할 수 있게하자</h1>
+    <p>논리연산은 비트연산과 비슷하다.</p>
+    <ul>
+        <li>|| Or : 논리의 합</li>
+            <ul>
+                <li>true || true : true</li>
+                <li>true || false : true</li>
+                <li>false || true : true</li>
+                <li>false || false : false</li>
+                <li>**논리 합은 한 개라도 true면 모두 true다</li>
+            </ul>
+        <li>&& And : 논리의 곱</li>
+        <ul>
+            <li>true && true : true</li>
+            <li>true && false : false</li>
+            <li>false && true : false</li>
+            <li>false && false : false</li>
+            <li>**논리 곱은 한 개라도 false면 모두 false다</li>
+        </ul>
+    </ul>
+
+    <h2>논리연산과 중단 점(논리연산이 멈추는 지점)</h2>
+    <p>js 엔진은 논리연산에서 참(||) 또는 거짓(&&)이 나올거라는 확신이 있다면 다음을 하지 않는다.</p>
+
+    <h2>논리연산의 우선 순위</h2>
+    <p>() >> 곱하기 > 더하기 <p>
+    <p>a || b && c || b && d => {a || (b && c) || (b && d)}</p>
+    <p>a && b || c && b || d => {(a && b) || (c && b) || d}</p>
+    <p>true || true && false || true && false => true || false || false => true</p>
+    <p>true && false || true && true || false => false || true || false => true </p>
+    <!-- 뒤에 false까지 계산되지 않음. 이미 true가 확실하기 때문 -->
+
+    <script>
+        (false || false || false || false || false || console.log("안녕"));
+        // 연산이 멈추지 않는다면 log가 출력될거다.
+        // 언젠가는 true가 나오겠지라고 js는 받아들임.. 계속 false라는 보장이 없기 때문에 연산을 멈추지 못함.
+        (false || false || false || true || false || console.log("안녕2"));
+        // 이미 true가 나왔기 때문에 이후에 true가 나와도 상관이 없어서 이미 그 답에서 true라는 확신이 있다면 다음 연산을 하지 않는다. => "안녕2"이라는 말이 출력되지 않음.
+
+        (false && false && false && false && false && console.log("안녕3"));
+        (true && true && true && true && true && console.log("안녕4"));
+        (true && true && true && false && true && console.log("안녕5"));
+        // false라는 확신이 있다면 다음 연산을 하지 않는다.
+
+        console.log((true || true && false || true && false));
+        console.log((true && false || true && true || false));
+
+
+
+        // 1 | 1 : 1
+        // 1 | 0 : 1
+        // 0 | 1 : 1
+        // 0 | 0 : 0  : 둘 다 0 이어야 0
+
+        // 1 & 1 : 1
+        // 1 & 0 : 0
+        // 0 & 1 : 0
+        // 0 & 0 : 0  : 하나라도 0 이면 0
+
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>장바구니 만들어보기</title>
+</head>
+<style>
+    body{
+        margin: 0;
+    }
+    #basketList>li{
+        display: flex;
+        /* transition의 경우 임의로 변경 */
+    }
+    #selectedList{
+        width: 100%;
+        height: 200px;
+        background-color: antiquewhite;
+        /* position: relative - 모든 요소가 하나의 레이아웃에 포함되어서 영향을 주는 것 */
+        /* position: absolute; */
+        /* 해당 요소만 존재하는 독립적인 레이아수을 갖는다 */
+        position: sticky;
+        bottom: 0;
+        transition: all;
+        transition-duration: 100ms;
+        overflow: auto; /* 또는 y축으로 auto 주면 됨*/
+    }
+    .resize{
+        /* height: 25px !important; /* 우선순위에서 밀려서 실행이 안됨 */
+        /* opacity: 0.1; - 아래의 요소가 눌리지 않는다*/
+        /* display: none; - 수치가 없으면 애니메이션 대상이 아니다.*/
+        /* height: 25px !important; width: 153px !important; */
+        /* bottom: -170px !important; */
+        /* 요소를 직접 움직이는 것은 렌더링에 무리를 줄 수 있다. */
+        transform: translateY(calc(100% - 25px));
+        /* transform : 요소 전체에 영향을 주지 않고 형태를 변형하는 방식의 렌더링 */
+        /* 100% == bottom */
+    }
+    table,td,tr{
+        /* border-collapse: separate; => 기본값 collapse : border를 분리시키겠다.*/
+        border-collapse: collapse;
+    }
+    #resultTable{
+        width: 100%;
+        /* margin: 5px; */
+        padding: 5px;
+        text-align: center;
+    }
+    #resultTable>tfoot{
+        text-align: end;
+    }
+    #resultTable>thead>tr>th{
+        border-bottom:1px solid black ;
+        text-align: center;
+    }
+
+
+</style>
+<body>
+    <h1>장바구니 만들어보기</h1>
+    <h2>장바구니 버튼을 누르면 테이블에 추가하는 방법</h2>
+    <ul>
+        <li>1. html 문서의 text를 검색해서 html table을 만들어서 붙여넣기(원시적인 방법)</li>
+        <li>2. 리스트마다 장바구니 form을 가지고 버튼을 누르면 제출을 해서 table에 출력(보통 방법)</li>
+        <li>3. 2번까지는 똑같은데 장바구니 목록을 Object의 Array로 보관하면서 table을 객체로 만들어서 출력(고수 방법)</li>
+    </ul>
+    <ul id="basketList">
+        <li>
+            <div>
+                <img src="./img/우유.jpg" alt="더조은우유 2L">
+            </div>
+            <form action="#" class="basketform">
+                <!-- # : 요소의 아이디를 검색(서버에서 해당 양식을 처리하지 않고 내부적(js)으로 처리된다.) -->
+                <h4>
+                    더조은우유 2L
+
+                </h4>
+                <p><span>2500</span>원</p>
+                <p>
+                    <label>
+                        수량
+                        <!-- <input type="number" min="1" max="10" step="1"> -->
+                        <select name="cnt">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </label>
+                </p>
+                <p>
+                    <input type="hidden" name="num" value="1">
+                    <input type="hidden" name="title" value="더조은우유">
+                    <input type="hidden" name="price" value=2500>
+                    <button type="submit">장바구니</button>
+                    <button type="button">바로 구매</button>
+                </p>
+            </form>
+        </li>
+        <li>
+            <div>
+                <img src="./img/치즈.png" alt="더조은치즈">
+            </div>
+            <form action="#" class="basketform">
+                <h4>더조은치즈</h4>
+                <p><span>12000</span>원</p>
+                <p>
+                    <label>
+                        수량
+                        <!-- <input type="number" min="1" max="10" step="1"> -->
+                        <select name="cnt">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </label>
+                </p>
+                <p>
+                    <button type="button">장바구니</button>
+                    <button type="button">바로 구매</button>
+                </p>
+            </form>
+        </li>
+        <li>
+            <div>
+                <img src="./img/올리브유.png" alt="더조은올리브유 1L">
+            </div>
+            <form action="#" class="basketform">
+                <h4>더조은올리브유 1L</h4>
+                <p><span>22000</span>원</p>
+                <p>
+                    <label>
+                        수량
+                        <!-- <input type="number" min="1" max="10" step="1"> -->
+                        <select name="cnt">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </label>
+                </p>
+                <p>
+                    <button type="button">장바구니</button>
+                    <button type="button">바로 구매</button>
+                </p>
+            </form>
+        </li>
+        <li>
+            <div>
+                <img src="./img/깐마늘.jpg" alt="더조은마늘">
+            </div>
+            <form action="#" class="basketform">
+                <h4>더조은마늘 1망</h4>
+                <p><span>2000</span>원</p>
+                <p>
+                    <label>
+                        수량
+                        <!-- <input type="number" min="1" max="10" step="1"> -->
+                        <select name="cnt">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </label>
+                </p>
+                <p>
+                    <button type="button">장바구니</button>
+                    <button type="button">바로 구매</button>
+                </p>
+            </form>
+        </li>
+        <li>
+            <div>
+                <img src="./img/파스타면.png" alt="더조은파스타면">
+            </div>
+            <form action="#" class="basketform">
+                <h4>더조은파스타면</h4>
+                <p><span>2500</span>원</p>
+                <p>
+                    <label>
+                        수량
+                        <!-- <input type="number" min="1" max="10" step="1"> -->
+                        <select name="cnt">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </label>
+                </p>
+                <p>
+                    <button type="button">장바구니</button>
+                    <button type="button">바로 구매</button>
+                </p>
+            </form>
+        </li>
+        
+    </ul>
+    
+    <div id="selectedList">
+        <h4>
+            장바구니 목록
+            <button id="moveSelectedList">접기</button>
+        </h4>
+        <table id="resultTable" cellpadding=3px>
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>이름</th>
+                    <th>가격</th>
+                    <th>수량</th>
+                    <th>총가격</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6">전체 가격: <b id="totalPriceB">0</b></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <script>
+        const totalPriceB=document.getElementById("totalPriceB")
+        const resultTable=document.getElementById("resultTable")
+        const resultTableTbody=document.querySelector("#resultTable>tbody")
+        const moveSelectedList=document.getElementById("moveSelectedList")
+        const selectedList=document.getElementById("selectedList")
+        const basketList=document.getElementById("basketList")
+        const basketForms=Array.from(document.getElementsByClassName("basketform"));
+        console.log(basketForms);
+        console.log(resultTable.querySelectorAll("td"));
+        
+        function basketFormsSubmitHandler(e){
+            e.preventDefault();
+            console.log(resultTable.querySelectorAll("td"));
+            // console.log(this,e.target); // submit 버튼을 누른 form
+            // this를 쓰지않으면 어떤 form인지 알 수 없음
+            // this를 여기 함수에 쓰면 그 객체, 화살표함수면 부모 객체를 가리킨다.
+            console.log(e.target.num.value); // hidden으로 제출한 자료가 잘 도착했는지
+            console.log(e.target.title.value); // hidden으로 제출한 자료가 잘 도착했는지
+            let title=e.target.title.value
+            let num=e.target.num.value
+            let price=e.target.price.value
+            let cnt=e.target.cnt.value
+            console.log(title,num,price,cnt);
+            let str=`<tr>
+                <td>${num}</td>
+                <td>${title}</td>
+                <td>${price}</td>
+                <td>${cnt}</td>
+                <td>${Number(price)*Number(cnt)}</td>
+                <td>
+                    <button type="reset">삭제</button>
+                    </td>
+                    </tr>`; // 백틱을 사용하면 출력이 용이하다. 띄어쓰기(줄바꾸기)가 가능하다.
+            resultTableTbody.innerHTML+=str;
+            
+            console.log(resultTable.querySelectorAll("tr>td:nth-child(5)")); // 총가격 위치
+            let totalPrices=Array.from(resultTable.querySelectorAll("tr>td:nth-child(5)"));
+            let totalPrice=totalPrices.reduce((init,td)=>{
+                return nit+Number(td.innerText);
+            },0)
+            console.log(totalPrice);
+            totalPriceB.innerText=totalPrice;
+
+            let selectedListArr=[];
+            
+            
+        }
+        
+
+
+
+        basketForms.forEach((form)=>{
+            form.onsubmit=basketFormsSubmitHandler;
+        });
+
+
+        moveSelectedList.onclick=(e)=>{
+            if(selectedList.classList.contains("resize")){
+                selectedList.classList.remove("resize");
+                moveSelectedList.innerText="접기";
+            }else{
+                selectedList.classList.add("resize");
+                moveSelectedList.innerText="펴기";
+            }
+            // selectedList.classList.toggle("resize")
+            // selectedList.style.height="27px"; => 요소에 주는게 더 안좋음
+        }
+
+    </script>
+</body>
+</html>

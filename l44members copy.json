@@ -1,0 +1,33 @@
+
+[
+    {
+        "name":  "나",
+        "id": "i",
+        "age": 20,
+        "married": false
+    },
+    {
+         "name":  "너",
+         "id":  "you",
+         "age": 30,
+         "married": true
+        }
+]
+
+        
+// json으로 members 데이터 전송
+
+// let members= , ``(백틱) 생략 가능
+// shift+alt+f : 자동정렬 => 권장 작성 방법
+// ,로 열고 닫고 표시 가능
+// 모두 문자열
+/*
+<script>
+<!-- xml으로 members 데이터 전송 -->
+new XMLHTTPRequset("./members.json")
+// const xmlDoc=.. => 따로 전환이 필요하지 않음
+const member=JSON.parser(req.str); // 문자열을 객체로 변환
+let name=member[0]["name"]; // 나
+// 나를 찾기 위한 어려운 방법...
+
+</script>*/

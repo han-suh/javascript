@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>캘린더 일정 관리</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Open Sans", sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .calendar-controls {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        .calendar-controls button, .calendar-controls select {
+            padding: 5px 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background-color: #e5e5ea;
+            cursor: pointer;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .calendar div {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            cursor: pointer;
+        }
+        .calendar div:hover {
+            background-color: #007aff;
+            color: white;
+        }
+        .selected-date {
+            background-color: #2571ec !important;
+            color: white;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+        #scheduleForm {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        #scheduleForm input, #scheduleForm button {
+            padding: 8px;
+            margin: 5px;
+            border-radius: 5px;
+        }
+        #scheduleList {
+            max-width: 700px;
+            margin: 20px auto;
+            list-style: none;
+            padding: 0;
+        }
+        #scheduleList li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        #scheduleList li button {
+            color: red;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>캘린더 일정 관리</h1>
+    <div class="calendar-controls">
+        <button id="prevMonth">◀</button>
+        <select id="yearSelect"></select>
+        <select id="monthSelect"></select>
+        <button id="nextMonth">▶</button>
+    </div>
+    <div class="calendar" id="calendar"></div>
+    <form id="scheduleForm">
+        <input type="time" id="scheduleTime">
+        <input type="text" id="scheduleContent" placeholder="일정을 입력하세요">
+        <button type="button" id="addScheduleBtn">추가</button>
+    </form>
+    <ul id="scheduleList"></ul>
+
+    <script>
+        const calendar = document.getElementById('calendar');
+        const yearSelect = document.getElementById('yearSelect');
+        const monthSelect = document.getElementById('monthSelect');
+        const prevMonthBtn = document.getElementById('prevMonth');
+        const nextMonthBtn = document.getElementById('nextMonth');
+        const scheduleForm = document.getElementById('scheduleForm');
+        const scheduleTime = document.getElementById('scheduleTime');
+        const scheduleContent = document.getElementById('scheduleContent');
+        const addScheduleBtn = document.getElementById('addScheduleBtn');
+        const scheduleList = document.getElementById('scheduleList');
+
+        let currentYear = new Date().getFullYear();
+        let currentMonth = new Date().getMonth();
+        let selectedDate = null;
+        let schedules = JSON.parse(localStorage.getItem('schedules')) || {};
+
+        // 날짜 생성
+        const renderCalendar = (year, month) => {
+            calendar.innerHTML = '';
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
+
+            // 공백 채우기
+            for (let i = 0; i < firstDay; i++) {
+                calendar.innerHTML += '<div></div>';
+            }
+
+            // 날짜 생성
+            for (let date = 1; date <= lastDate; date++) {
+                const div = document.createElement('div');
+                div.textContent = date;
+                div.addEventListener('click', () => selectDate(year, month, date));
+                if (selectedDate && selectedDate.year === year && selectedDate.month === month && selectedDate.date === date) {
+                    div.classList.add('selected-date');
+                }
+                calendar.appendChild(div);
+            }
+        };
+
+        const selectDate = (year, month, date) => {
+            selectedDate = { year, month, date };
+            renderCalendar(currentYear, currentMonth);
+            loadSchedules();
+            scheduleForm.style.display = 'block';
+        };
+
+        const loadSchedules = () => {
+            scheduleList.innerHTML = '';
+            const key = `${selectedDate.year}-${selectedDate.month + 1}-${selectedDate.date}`;
+            const daySchedules = schedules[key] || [];
+
+            // 시간 오름차순 정렬
+            daySchedules.sort((a, b) => a.time.localeCompare(b.time));
+
+            daySchedules.forEach((schedule, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${formatTime(schedule.time)} - ${schedule.content}</span>
+                    <button onclick="deleteSchedule('${key}', ${index})">삭제</button>
+                `;
+                scheduleList.appendChild(li);
+            });
+        };
+
+        const saveSchedules = () => {
+            localStorage.setItem('schedules', JSON.stringify(schedules));
+        };
+
+        const addSchedule = () => {
+            const key = `${selectedDate.year}-${selectedDate.month + 1}-${selectedDate.date}`;
+            if (!schedules[key]) schedules[key] = [];
+            schedules[key].push({ time: scheduleTime.value, content: scheduleContent.value });
+            saveSchedules();
+            loadSchedules();
+            scheduleTime.value = '';
+            scheduleContent.value = '';
+        };
+
+        const deleteSchedule = (key, index) => {
+            schedules[key].splice(index, 1);
+            if (schedules[key].length === 0) delete schedules[key];
+            saveSchedules();
+            loadSchedules();
+        };
+
+        // 12시간제로 표시 - 대신 index가 입력 순으로 정렬.. 24시간제로 표시하면 시간순으로 정렬
+        const formatTime = (time) => {
+            const [hour, minute] = time.split(':').map(Number);
+            const period = hour >= 12 ? 'PM' : 'AM';
+            const formattedHour = hour % 12 || 12;
+            return `${formattedHour}:${minute.toString().padStart(2, '0')} ${period}`;
+        };
+
+        // 이벤트 리스너
+        addScheduleBtn.addEventListener('click', addSchedule);
+        prevMonthBtn.addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar(currentYear, currentMonth);
+        });
+        nextMonthBtn.addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar(currentYear, currentMonth);
+        });
+
+        // 초기화
+        const initYearMonthSelect = () => {
+            for (let i = 1900; i <= 2100; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                yearSelect.appendChild(option);
+            }
+            for (let i = 0; i < 12; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `${i + 1}월`;
+                monthSelect.appendChild(option);
+            }
+            yearSelect.value = currentYear;
+            monthSelect.value = currentMonth;
+        };
+
+        yearSelect.addEventListener('change', () => {
+            currentYear = +yearSelect.value;
+            renderCalendar(currentYear, currentMonth);
+        });
+
+        monthSelect.addEventListener('change', () => {
+            currentMonth = +monthSelect.value;
+            renderCalendar(currentYear, currentMonth);
+        });
+
+        initYearMonthSelect();
+        renderCalendar(currentYear, currentMonth);
+    </script>
+</body>
+</html>

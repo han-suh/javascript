@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>폼요소와 입력요소에 대해 알아봅시다!</title>
+</head>
+<body>
+    <h1>폼요소와 입력요소에 대해 알아봅시다!</h1>
+    <h2>폼요소와 액션과 입력요소(!!!)</h2>
+    <ul>
+        <li>form : 복수의 데이터를 특정서버에 보내기 위한 양식이다 (회원가입 양식)</li>
+        <li>form.action : 양식을 보내는 리소스의 위치 (회원가입처리 액션 페이지) </li>
+        <li>form.name==form.id : 고유 션택자 => 
+            js forms[name or id] forms.signupForm, forms["signupForm"]</li>
+        <li>input.type=text : 서버에 보낼 데이터를 입력하는 곳</li>
+        <li>input.name : 1.서버에 보내는 파라미터의 이름, 
+            2.form 요소의 하위 개체(필드)처럼 접근 가능 forms.signupForm.userId</li>
+        <li>input.value : 유저가 입력할 값 또는 기본값</li>
+        <li>제출 url : http://127.0.0.1:5500/signup.action?userId=develckm&userName=%EC%B5%9C%EA%B2%BD%EB%AF%BC</li>
+        <!-- url 인코딩 -->
+        <!-- utf-8로 표현된 인코딩 -->
+        <li> http://127.0.0.1:5500 : 제출할 리소스가 있는 서버의 위치 
+            (네이버 서버가 실행되고 있는 컴퓨터 위치 == www.naver.com(문자열로 감추고 있는 것 - 도메인 시스템(127.0.0.1:5500)))</li>
+            <!-- ip : 인터넷에서 컴퓨터한테 부여한 고유 주소 -->
+            <!-- port : 컴퓨터에 설치된 서버 프로그램의 고유 번호 -->
+        <li>signup.action : 서버에서 배포하거나 실행 중인 리소스 (저장된 파일의 위치==path)</li>
+        <!-- 리소스 : 저장되고 공유되는 데이터 -->
+        <!-- 공유는 주소로 가능!!! -->
+        <!-- 정적 리소스 : html, css, js, png, jpg, mp3 => 고정data. 서버에서 정적(서버(back)에서 실행되지 않고 브라우저(front)에 와서 실행) : frontend-->
+        <!-- 동적 리소스 : java, nodejs, python, pnp, c# => 서버에서 실행됨 : backend-->
+        <li>?userId=develckm&userName=%EC%B5%9C%EA%B2%BD%EB%AF%BC : ? 다음을 쿼리스트링 
+            파라미터를 규칙대로 나열한것 (?userId=develckm&a=안녕&b=잘가&userName=최경민)
+            / & :파라미터 구분 / = : key와 value 구분
+        </li>
+        <!-- 쿼리스트링은 동적 리소스가 필요 -->
+        <li>
+            %EC%B5%9C%EA%B2%BD%EB%AF%BC (최경민): 한글을 바이트 단위로 16진수로 표현한것 - 인코딩으로 인해서(깨져보이는 것) utf-8로 표현된 것
+            (url인코딩:한글->16진수로, 공백->+)
+        </li>
+        <li>label : input 요소를 focus 하는 용도로 사용됨
+            (input 요소가 작거나 완전히 다른 input요소로 만들때 ) 
+            <ul>
+                <li>label>input 포함시켜서 작성 : label에 for를 지워야 한다.</li>
+                <li>label[for=id]을 input#id과 상관없는 외부에 작성후 label의 for에 id를 대응시킨다.</li>
+                <li>onfocus : input 요소를 작성하기 위해서 클릭하면 발생하는 이벤트</li>
+                <li>onblur : focus를 학고 있다가 벗어나는 상태</li>
+            </ul>
+        </li>
+        <li>input[type=checkbox] : 체크박스는 하나의 이름으로 복수의 데이터를 보낼때 사용됩니다.
+            <ul>
+                <li>checked : true or false 를 갖는데 존재하면 true 없으면 false 입니다.
+                    <ul>
+                        <li>checked="checked" (x) =>true</li>
+                        <li>checked="true" (X)=>true :문자열 true는 의미가 없다.</li>
+                        <li>checked="false" (X)=>true :작성하는 것 자체가 true</li>
+                        <li>checked (O)  예) forms.form.checkbox.checked=(true or false)</li>
+                    </ul>
+                </li>
+                <li>onchange : checked의 boolean 데이터가 바뀔때마다 실행되는 이벤트 함수</li>
+                <li>oninput : checkbox를 눌르기만 하면 발생하는 이벤트</li>
+                <li>RadioNodeList : type이 checkbox와 radio인 input을 name 같은 것만 묶어서 배열로 반환</li>
+        </li>
+        <li>input[type=radio] : 라디오 버튼은 하나의 이름으로 복수의 데이터 중 하나를 선택해서 보낼 때 사용됩니다.
+            나머지는 checkbox와 같은데 선택된 input이 있으면 RadioNodeList의 value가 참조한다.     
+        </li>
+        <li>button[type=submit(생략)]==input[type=submit] :
+            양식을 action에 작성된 리소스에 제출하는 버튼
+            <ul>
+                <li>onclick,oninput: 누를때 이벤트가 발생 </li>
+                <li>onsubmit : 버튼을 포함하는 form의 submit 이벤트(양식을 제출)를 발생시킨다.
+                    (버튼에는 이벤트가 발생하지 않는다.)
+                </li>
+                <li>function(e){} : 이벤트를 재정의할 때 사용할 수 있는 e는 이벤트 정보를 담고 있다. 
+                    (e.target==this 이벤트가 발생한대상)
+                </li>
+                <li>e.preventDefult() : 이벤트를 강제 종료하는 함수, 이벤트의 연쇄작용을 끊는다.
+                    예) 마우스클릭(onclick(e))->( button.input(e), form.submit(e) )(연쇄)
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <form action="./signup.action" name="signupForm" id="signupForm">
+        <label>
+            유저아이디(라벨이 인풋요소 포함) : 
+            <input type="text" name="userId"  value="develckm">
+        </label>
+        <br>
+        <label for="userName">유저이름(라벨이 인풋요소의 외부) :</label>
+        <input type="text" name="userName" id="userName" value="최경민">
+        <br>
+        <h5>취미</h5>
+        <p id="checkedHobbies"></p>
+        <label>
+            농구: <input type="checkbox" name="hobby" value="농구">,
+        </label>
+        <label>
+            축구: <input type="checkbox" name="hobby" value="축구" checked>,
+        </label>
+        <label>
+            테니스: <input type="checkbox" name="hobby" value="테니스">,
+        </label>
+        <label>
+            화장: <input type="checkbox" name="hobby" value="화장">,
+        </label>
+        <label>
+            독서: <input type="checkbox" name="hobby" value="독서" checked>,
+        </label>
+        <h5>성별</h5>
+        <label>
+            여성: <input type="radio" name="gender" value="female">,
+        </label>
+        <label>
+            남성: <input type="radio" name="gender" value="male">
+        </label>
+        <hr>
+        <input name="submitBtn" type="submit" value="서브밋버튼">
+    </form>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <script>
+        const signupForm=document.forms["signupForm"];
+        //const submitBtn=signupForm.querySelector("[type=submit]")
+        const submitBtn=signupForm.submitBtn;
+        const checkedHobbies=document.getElementById("checkedHobbies")
+        //onclick : 마우스로 요소를 누름
+        //oninput : 입력요소(type=text)가 키보드에 의해 눌릴때마다 이벤트발생
+        signupForm.userName.oninput=function(e){
+            console.log(this.value); 
+            
+        }        
+        signupForm.onsubmit=function(e){
+            //submit 버튼은 혼자 이벤트를 발생시키지 않고 form요소와 같이 이벤트를 발생시키기 때문에 
+            //form 요소의 submit 이벤트를 막을 수 없다.
+            e.preventDefault();
+        }
+
+    </script>
+
+</body>
+</html>

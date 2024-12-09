@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>캘린더 일정 관리</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            background-color: #f5f5f7;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .calendar-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-controls select, .calendar-controls button {
+            padding: 5px 10px;
+            font-size: 14px;
+            margin: 0 5px;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .calendar div {
+            text-align: center;
+            padding: 15px;
+            border-radius: 4px;
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .calendar div:hover {
+            background-color: #007aff;
+            color: white;
+        }
+
+        .selected-date {
+            background-color: #005ecb;
+            color: white;
+        }
+
+        #scheduleForm {
+            margin: 20px 0;
+            display: none;
+            text-align: center;
+        }
+
+        #scheduleForm input, #scheduleForm button {
+            padding: 5px 10px;
+            margin: 5px;
+        }
+
+        #scheduleList {
+            list-style: none;
+            padding: 0;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        #scheduleList li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #ffffff;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        #scheduleList li button {
+            background: none;
+            border: none;
+            color: #ff3b30;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        #scheduleList li button:hover {
+            color: #d70015;
+        }
+    </style>
+</head>
+<body>
+    <h1>캘린더 일정 관리</h1>
+    <div class="calendar-controls">
+        <button id="prevMonth">이전</button>
+        <select id="yearSelect"></select>
+        <select id="monthSelect"></select>
+        <button id="nextMonth">다음</button>
+    </div>
+    <div class="calendar" id="calendar"></div>
+    <form id="scheduleForm">
+        <p>
+            <label>시간: <input type="time" id="scheduleTime"></label>
+            <label>일정: <input type="text" id="scheduleContent"></label>
+            <button type="button" id="addScheduleBtn">추가</button>
+        </p>
+    </form>
+    <ul id="scheduleList"></ul>
+
+    <script>
+        const calendar = document.getElementById("calendar");
+        const yearSelect = document.getElementById("yearSelect");
+        const monthSelect = document.getElementById("monthSelect");
+        const prevMonth = document.getElementById("prevMonth");
+        const nextMonth = document.getElementById("nextMonth");
+        const scheduleForm = document.getElementById("scheduleForm");
+        const scheduleList = document.getElementById("scheduleList");
+        const scheduleTime = document.getElementById("scheduleTime");
+        const scheduleContent = document.getElementById("scheduleContent");
+        const addScheduleBtn = document.getElementById("addScheduleBtn");
+
+        let selectedDate = null; // 현재 선택된 날짜
+        const scheduleData = JSON.parse(localStorage.getItem("schedules")) || {}; // 로컬스토리지에서 불러오기
+
+        // 현재 날짜
+        const today = new Date();
+        let currentYear = today.getFullYear();
+        let currentMonth = today.getMonth();
+
+        // 캘린더 렌더링
+        function renderCalendar(year, month) {
+            calendar.innerHTML = "";
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDay = firstDay.getDay();
+            const totalDays = lastDay.getDate();
+
+            // 빈칸 추가 (첫 주 시작 요일 전)
+            for (let i = 0; i < startDay; i++) {
+                const emptyDiv = document.createElement("div");
+                calendar.appendChild(emptyDiv);
+            }
+
+            // 날짜 출력
+            for (let day = 1; day <= totalDays; day++) {
+                const dateDiv = document.createElement("div");
+                const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+                dateDiv.textContent = day;
+                dateDiv.dataset.date = dateStr;
+                dateDiv.addEventListener("click", () => onDateClick(dateDiv));
+
+                if (scheduleData[dateStr]) {
+                    dateDiv.style.fontWeight = "bold"; // 일정이 있으면 강조
+                }
+
+                calendar.appendChild(dateDiv);
+            }
+
+            // 연도와 월 선택 업데이트
+            yearSelect.value = year;
+            monthSelect.value = month;
+        }
+
+        // 날짜 클릭 핸들러
+        function onDateClick(dateDiv) {
+            if (selectedDate) {
+                selectedDate.classList.remove("selected-date");
+            }
+
+            selectedDate = dateDiv;
+            dateDiv.classList.add("selected-date");
+
+            const date = dateDiv.dataset.date;
+            showScheduleForm(date);
+            renderScheduleList(date);
+        }
+
+        // 일정 추가
+        addScheduleBtn.addEventListener("click", () => {
+            const date = selectedDate.dataset.date;
+            const time = scheduleTime.value;
+            const content = scheduleContent.value;
+
+            if (!time || !content) {
+                alert("시간과 일정을 입력해주세요!");
+                return;
+            }
+
+            if (!scheduleData[date]) {
+                scheduleData[date] = [];
+            }
+
+            scheduleData[date].push({ time, content });
+            localStorage.setItem("schedules", JSON.stringify(scheduleData)); // 로컬스토리지에 저장
+
+            scheduleTime.value = "";
+            scheduleContent.value = "";
+            renderScheduleList(date);
+            renderCalendar(currentYear, currentMonth); // 일정 반영
+        });
+
+        // 일정 리스트 출력
+        function renderScheduleList(date) {
+            scheduleList.innerHTML = "";
+            if (scheduleData[date]) {
+                scheduleData[date].forEach((schedule, index) => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                        <span>${schedule.time} - ${schedule.content}</span>
+                        <button onclick="deleteSchedule('${date}', ${index})">삭제</button>
+                    `;
+                    scheduleList.appendChild(li);
+                });
+            }
+        }
+
+        // 일정 삭제
+        window.deleteSchedule = function (date, index) {
+            scheduleData[date].splice(index, 1);
+            if (scheduleData[date].length === 0) {
+                delete scheduleData[date];
+            }
+            localStorage.setItem("schedules", JSON.stringify(scheduleData)); // 로컬스토리지에 반영
+            renderScheduleList(date);
+            renderCalendar(currentYear, currentMonth); // 일정 반영
+        };
+
+        // 일정 등록 폼 표시
+        function showScheduleForm(date) {
+            scheduleForm.style.display = "block";
+        }
+
+        // 연도와 월 선택 업데이트
+        function updateYearMonthControls() {
+            yearSelect.innerHTML = "";
+            monthSelect.innerHTML = "";
+
+            for (let year = today.getFullYear() - 10; year <= today.getFullYear() + 10; year++) {
+                const option = document.createElement("option");
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            }
+
+            for (let month = 0; month < 12; month++) {
+                const option = document.createElement("option");
+                option.value = month;
+                option.textContent = `${month + 1}월`;
+                monthSelect.appendChild(option);
+            }
+        }
+
+        // 월 이동 버튼
+        prevMonth.addEventListener("click", () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar(currentYear, currentMonth);
+        });
+
+        nextMonth.addEventListener("click", () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar(currentYear, currentMonth);
+        });
+
+        // 연도/월 선택 핸들러
+        yearSelect.addEventListener("change", () => {
+            currentYear = parseInt(yearSelect.value, 10);
+            renderCalendar(currentYear, currentMonth);
+        });
+
+        monthSelect.addEventListener("change", () => {
+            currentMonth = parseInt(monthSelect.value, 10);
+            renderCalendar(currentYear, currentMonth);
+        });
+
+        // 초기화
+        updateYearMonthControls();
+        renderCalendar(currentYear, currentMonth);
+    </script>
+</body>
+</html>
