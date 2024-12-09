@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>함수 만들기 실습</title>
+</head>
+<body>
+    <h1>함수 만들기 실습입니다.</h1>
+    <ol>
+        <li>x의 n제곱을 반환하는 pow를 만들어 보세요.(매개변수가 2개)</li>
+        <li>함수 inputPow를 실행하면 prompt로 x와 n 값을 받아서 제곱값 alert에 출력하세요. (매개변수, 반환 없음)</li>
+        <li></li>
+        <li></li>
+    </ol>
+
+<script>
+    console.log(pow(3,7));
+    
+    inputPow();
+    
+    function pow(x,n){
+        let result=x**n
+        return result;
+    }
+
+    function inputPow(){
+        let x=prompt("x");
+        let n=prompt("n");
+        let result=Number(x)**Number(n)
+        alert(result);
+    }
+
+
+
+
+    // function pow(x,n){ 
+    //     return x**n; 
+    // }
+
+    // console.log(pow(2,3));
+
+
+
+
+    // function inputPow(){
+    //     let result=x**n
+    //     return result;
+    // }
+
+    // let x=Number(window.prompt("x"));
+    // let n=Number(window.prompt("n"));
+    // let d=inputPow();
+    // window.alert();
+    // console.log();
+
+
+    
+    
+</script>
+
+    
+</body>
+</html>

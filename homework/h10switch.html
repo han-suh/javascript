@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>switch 연습</title>
+</head>
+<body>
+    <h1>switch 연습</h1>
+    <ul>
+        <li>switch 구문으로 let a=11; 의 수가 짝수인지 홀수인지 콘솔에 출력하세요.</li>
+        <li>setGrade를 switch로 작성하는데 "+"를 제외하세요.</li>
+    </ul>
+
+    <script>
+        let a=11;
+        let key=a%2
+        switch(key){
+            case 1 : 
+                console.log("key는 홀수입니다.");                
+            break;
+            case 0 :
+                console.log("key는 짝수입니다.");                
+            break;
+            // default :
+            //     console.log("key는 짝수입니다.");
+            //break; // default는 마지막이여서 break; 생략 가능
+        }
+
+        function setGrade(score){
+        //let score=95;
+            let grade="";
+            let plus="";
+            let key2=Math.floor(score/10);
+            let key3=Math.round(score/10)-key2
+            switch(key2){
+                case 10 : 
+                grade="A+";
+                break;
+                case 9 : 
+                grade="A";
+                break;
+                case 8 : 
+                grade="B";
+                break;
+                case 7 : 
+                grade="C";
+                break;
+                case 6 : 
+                grade="D";
+                break;
+                default :
+                grade="D";
+            }
+            switch(key3){
+                case 1 : 
+                    plus="+";
+                break;
+                default :
+                    plus="";
+            }
+            return grade+plus;     
+        }
+        console.log(setGrade(78));
+        
+
+
+        // let key2=Math.floor(score/10);
+        // switch(key2){
+        //     case 10 : 
+        //         console.log("A");
+        //     break;
+        //     case 9 : 
+        //         console.log("A");
+        //     break;
+        //     case 8 : 
+        //         console.log("B");
+        //     break;
+        //     case 7 : 
+        //         console.log("C");
+        //     break;
+        //     case 6 : 
+        //         console.log("D");
+        //     break;
+        //     default :
+        //         console.log("F");
+        // }
+
+
+
+
+
+    </script>
+    
+</body>
+</html>

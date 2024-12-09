@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>제어문 실습</title>
+</head>
+<body>
+    <h1>제어문 실습</h1>
+    <ul>
+        <li>prompt 로 입력받은 수가 음수인지 양수인지 알려주는 제어문을 작성하세요</li>
+        <li>let num=-7; 음수인지 양수인지 알려주는 제어문을 작성하세요.</li>
+        <li>위 수를 prompt로 받으세요</li>
+        <li>let score=87; let grade=null; grade를 score에 맞게 참조시키세요.</li>
+    </ul>
+    <script>
+        // let num=prompt("수를 입력하세요");
+        // let num=-7;
+        // num=Number(num);
+        // if(num>=0){ // > < 비교연산, +를 제외한 수학 연산을 하면 자동으로 수로 형변환한다.
+        //     if(num==0){
+        //         alert("0")
+        //     }
+        //     else{
+        //         alert("양수")
+        //     }
+        // }else{
+        //     alert("음수")
+        // }
+
+ 
+        // let su=prompt("수를 입력하면 양수인지 음수인지를 알려줍니다.");
+        // if(su>0){
+        //     alert("양수입니다.");
+        // }
+        // else{
+        //     alert("음수입니다.");
+        // }
+
+
+        // let score=1;
+        // let grade=null;
+
+
+        // if(score>100){
+        //     grade="잘못입력"; 
+        // }
+        // else if(score>=90 && score<=100){
+        //     grade="A"; 
+        // }
+        // else if(score>=80 && score<=90){
+        //     grade="B";
+        // }
+        // else if(score>=70 && score<=80){
+        //     grade="C";
+        // }
+        // else if(score>=60 && score<=80){
+        //     grade="D";
+        // }
+        // else{
+        //     grade="F";
+        // }
+        // console.log(grade);
+
+
+        // let g=null;
+        // if(score<=100 && score>=0){
+        //     if(score>=90){
+        //         g="A"; 
+        //     }
+        //     else if(score>=80){
+        //         g="B";
+        //     }
+        //     else if(score>=70){
+        //         g="C";
+        //     }
+        //     else if(score>=60){
+        //         g="D";
+        //     }
+        //     else{
+        //         g="F";
+        //     }
+        // }
+        // else{
+        //     g="점수 잘못 입력"
+        // }
+        // console.log(g);
+
+        // 함수(gradeSystem)로 변경 (과제) 매개변수는 score 반환값은 grade
+        // => 타입으로 변경 GradeSystem (score, grade 필드가 있는)
+
+        function gradeSystem(score) {
+            //score=prompt("점수를 입력하세요");
+            let grade=null;
+            let result
+            if(score<=100 && score>=0){
+                if(score>=90){
+                    grade="A";
+                }
+                else if(score>=80){
+                    grade="B";
+                }
+                else if(score>=70){
+                    grade="C";
+                }
+                else if(score>=60){
+                    grade="D";
+                }
+                else{
+                    grade="F";
+                }
+            }
+            else{
+                grade="점수 잘못 입력"
+            }
+            alert(grade);
+            return grade;
+        }
+
+        console.log(gradeSystem());
+        
+
+
+/*        class GradeSystem {
+            constructor(score) {
+                this.score = score;
+                this.grade = null;
+            }
+            //get grade(){ //grade 필드를 반환하는 함수}
+
+            setGrade() { //성적을 만드는 함수
+                let score=this.score;
+                if (score <= 100 && score >= 0) {
+                    if (score >= 90) {
+                        this.grade = "A"
+                    } else if (score >= 80) {
+                        this.grade  = "B"
+                    } else if (score >= 70) {
+                        this.grade  = "C"
+                    } else if (score >= 60) {
+                        this.grade  = "D"
+                    } else {
+                        this.grade  = "F"
+                    }
+                } else {
+                    this.grade  = "점수를 잘못 입력"
+                }
+            }
+            getGrade(){//성적을 반환하는 함수
+                return this.grade;
+            }
+        }
+        let gSystem=new GradeSystem(97);
+        gSystem.setGrade(); 
+        console.log(gSystem.getGrade());
+        */
+
+    </script>
+    
+</body>
+</html>

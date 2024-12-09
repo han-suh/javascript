@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>for 반복문 연습문제</title>
+</head>
+<body>
+    <h1>for 반복문 연습문제</h1>
+    <script>
+        // 1. 구구단을 출력하는 함수를 만드세요
+        // gugudan(2);
+        // 2*1=2 ..... 2*9=18
+
+        function gugudan(dan){
+            // 자바스크립트가 엔터를 ";"으로 자동으로 인지 하기 때문(\n2)
+            // let str="2*1=2\n2*2=4";
+            // let str=dan+"단 시작\n";
+            let str=`${dan}단 시작\n`;
+            for(let i=1; i<10; i++){
+                // str+=(dan+"X"+i+"="+dan*i)+"\n";
+                // ${}표현식을 사용할 수 있는 문자열(백틱)
+                str+=`${dan}x${i}=${dan*i}\n`;
+                // '' == ""
+            }
+
+
+            return str; // return 하면 함수 종료. 밑에 뭘 써도 실행이 안됨. 
+        }
+        let dan2=gugudan(2)
+        console.log(dan2);
+        console.log(gugudan(13));
+        
+
+
+        // function gugudan(dan){
+        //     let a=1;
+        //     //dan=null;
+        //     while(a<10){
+        //         console.log(dan+"*"+a+"="+dan*a)
+        //         a++;
+        //     }
+        //     return dan
+        // }
+        // gugudan(4);
+
+        // function gugudan2(dan2){
+        //     for(let g=1; g<10; g++){
+        //     console.log(`${dan2}*${g}=${dan2*g}`);
+        //     }
+        //     return dan2
+        // }
+        // gugudan2(2);
+        
+
+    
+
+
+
+        // 2. 
+        // powArr(2);
+        // [1, 2, 4, 8, 16, .... 1024] => 10제곱에 대한 값까지를 배열로 반환
+
+        function powArr(num){
+            let arr=[];
+            arr[3]=1024; // 특정 인덱스에 데이트를 참조하면 나머지는 undefined가 된다.
+            // [undefined,undefined,undefined,1024] empty*3==undefined*3
+            // "1.null"답   2.0   3.undefined
+            // arr.push(100) // 마지막 인덱스 다음에 data가 참조된다.
+            for(let i=0; i<11; i++){
+                //arr.push(num**i)
+                arr[i]=Math.pow(num,i)
+            }
+
+
+            return arr;
+
+        }
+        let arrPow3=powArr(3)
+        console.log(arrPow3);
+        console.log(powArr(999)); // 9.900448802097483e+29 : 실수의 특징
+        console.log(powArr(9999999999999999999999999999999999));
+        // Infinity : 지수부로 표현할 수 없는 엄청난 큰 수 -> 이정도면 무한대라 할 수 있다..
+
+
+        // function powArr(num){
+        //     let b=0;
+        //     let arr=[];
+        //     while(b<11){
+        //         //console.log(num**b);
+        //         arr.push(num**b)
+        //         //arr[b]=(num**b)
+        //         b++;                
+        //     }
+        //     return arr
+        // }
+
+        // console.log(powArr(3));
+
+
+        // function powArr(num){
+        //     let arr=[];
+        //     for(let b=0; b<11; b++){
+        //         arr.push(num**b)
+        //     }
+        //     return arr
+        // }
+
+        // console.log(powArr(2));
+
+
+
+
+        // for(let i=0; i<arr2.length; i++){//i++은 계속 일어나야하기 때문에 ; 생략  // arr2.length - length
+        //     if(isNaN(arr2[i])) arr2.splice(i,1);
+        // }
+        // console.log("for 반복문");
+        // console.log(arr2);
+
+
+        function setGrade(score){
+        // 매개변수로 score,grade 할 수 있지만 단순할수록 함수를 재사용하기 좋다.
+        // 95점 9.5 반올림 10-9=1
+        // 94점 9.4 반올림 9-9=0
+        // 88점 8.8 반올림 9-8=1
+        // "+"일 때 반올림(round, ceil, floor) 점수와 버림 점수를 빼면 무조건 1이 나온다.
+            let key=Math.floor(score/10); // 버림 6.6 => 6
+            let plus="";
+            if(Math.round(score/10)-key === 1){
+                plus="+"
+            }else{
+                plus=""
+            }
+
+            let grade;
+            if(key===10){
+                grade="A+"; //return("A");
+                }else if(key<6){
+                    grade="F"
+            }else{
+                if(key===9){
+                    grade=("A");
+                }else if(key===8){
+                    grade=("B");
+                }else if(key===7){
+                    grade=("C");
+                }else if(key===6){
+                    grade=("D");
+                }
+                grade+=plus
+                }
+            return grade;
+        }
+        // 3. 
+        // let score=[66, 77, 90, 80, 50...88]
+        // let grades=[]
+        // 위의 score를 성적내서 grades로 반환하는 함수를 만드세요.
+        // => ["D", "C", "A", "B", "F", "B"]
+        function setGrades(scores){
+            let grades=[]
+            //let key=Math.floor(score/10); // 6.6 => 6
+            // let gradeObj={6:"D",7:"C",8:"B",9:"A",10:"A"}
+            // // object key를 이용해서 if문 대신 사용하기 (js 개발자들이 애용하는 방법)
+            // return gradeObj[key]
+            // if(key===10){
+            //     return "A"
+            // }else if(key===9){
+            // }
+            for(let i=0; i<scores.length; i++){
+                grades.push(setGrade(scores[i]));
+                // let key=Math.floor(scores[i]/10);
+                // if(key===10){
+                //     grades.push("A");
+                // }else if(key===9){
+                //     grades.push("A");
+                // }else if(key===8){
+                //     grades.push("B");
+                // }else if(key===7){
+                //     grades.push("C");
+                // }else if(key===6){
+                //     grades.push("D");
+                // }else{
+                //     grades.push("F");
+                // }
+                // console.log(scores[i]);
+            }
+            //void == return undefined; == return(*void 함수가 특정 위치에서 종료하고 싶을 때 사용);
+            return grades;
+        }
+        let scores=[66, 77, 90, 80, 50, 88, 100]
+        console.log(setGrades(scores));
+        
+
+
+
+/*
+        function setGrades(score){
+            //score=[];
+            let grade=[];
+            for(let i=0; i<score.length; i++){
+                    if(score[i]<=100 && score[i]>=0){
+                        if(score[i]>=90){
+                            g="A";
+                        }
+                        else if(score[i]>=80){
+                            g="B";
+                        }
+                        else if(score[i]>=70){
+                            g="C";
+                        }
+                        else if(score[i]>=60){
+                            g="D";
+                        }
+                        else{
+                            g="F";
+                        }
+                    }
+                    else{
+                        g="점수 잘못 입력"
+                    }
+                grade.push(g)
+            }
+            return grade;
+        }
+        let score=[66, 77, 90, 80, 50, 88];
+        let grade=setGrades(score);
+        console.log(grade);
+
+*/
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>promise 실습</title>
+    <style>
+        #ex{
+            display: none;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded",init);
+        function init(){
+            const productTbody=document.getElementById("productTbody");
+            const ex=document.getElementById("ex");
+            new Promise((resolve)=>{
+                const req=new XMLHttpRequest();
+                req.open("GET","./l18products.json");
+                req.send();
+                req.onload=()=>{
+                    let json=req.responseText;
+                    console.log(json);
+                    let products=JSON.parse(json);
+                    console.log(products); // 배열이라서 forEach 반복문
+                    products.forEach((p)=>{
+                        let tr=ex.cloneNode(true);
+                        tr.removeAttribute("id");
+                        console.log(tr);
+                        //console.log(p);
+                        for(let key in p){
+                            console.log(key);
+                            console.log(p[key]);
+                            let td=tr.querySelector("."+key); // []속성선택자
+                                // 복사한 tr에서 key로 td를 하나씩 찾음
+                            //console.log(td);
+                            td?.append(document.createTextNode(p[key]));
+                            /*
+                            if(td){
+                                td.append(document.createTextNode(p[key]));
+                            }*/
+                            
+                        }
+                        productTbody.append(tr);
+                    });
+                    resolve("상품 다운 및 출력 끝")
+                };
+            }).then((msg)=>{
+                const req=new XMLHttpRequest();
+                req.open("GET","./l19baskets.json");
+                req.send();
+                req.onload=()=>{
+                    let baskets=JSON.parse(req.responseText);
+                    console.log(baskets); // ***객체여서 for in 반복문!!!
+                    for(let num in baskets){
+                        // if(num==="total")continue; //total 일 때 반복문 제외
+                        if(isNaN(num))continue; // ==
+                        let basket=baskets[num];
+                        // console.log(basket);
+                        let tr=ex.cloneNode(true);
+                        tr.removeAttribute("id");
+                        for(let key in basket){
+                            let td=tr.querySelector("."+key);
+                            console.log(td);
+                            td.innerText=basket[key];
+                        }
+                        productTbody.append(tr);
+                    }
+                    
+                }
+            })
+
+        }
+    </script>
+</head>
+<body>
+    <h1>promise 실습</h1>
+
+    <h2>장바구니를 먼저 출력하고 상품을 출력</h2>
+    <table>
+        <thead>
+            <tr id="productEx">
+                <th>num</th>
+                <th>title</th>
+                <th>price</th>
+                <th>cnt</th>
+                <th>total</th>
+                <th>img</th>
+            </tr>
+        </thead>
+        <tbody id="productTbody">
+            <tr id="ex">
+                <td class="num"></td>
+                <td class="title"></td>
+                <td class="price"></td>
+                <td class="cnt"></td>
+                <td class="total"></td>
+                <td class="img" src=""></td>
+                <!-- thead가 아닌 tbody에 클래스 부여!! -->
+            </tr>
+        </tbody>
+        <tfoot>
+        </tfoot>
+    </table>
+    
+  <script>
+/*        const productList=document.getElementById("productList");
+        new Promise((resolve)=>{
+            const req=new XMLHttpRequest();
+            req.open("GET","./l19baskets.json");
+            req.send();
+            req.onload=()=>{
+                if(req.status!==200){
+                    alert("데이터를 불러오는데 실패! 다시시도!");
+                    return; 
+                }
+                let products=JSON.parse(req.responseText);
+                console.log(products);
+                products.forEach=(p)=>{
+                    let ex=productEx.cloneNode(true);
+                    ex.removeAttribute("id");
+                    console.log(p);
+                    
+                    for(let item in p){
+                        let node=ex.querySelector("."+item);
+                        let form=ex.querySelector("productList");
+                        if(key==="img[src]"){
+                            node=p[key];
+                        }else{
+                            node?.append(document.createTextNode(p[key]))                  
+                            form[key].value=p[key];
+                        }
+                    }
+                };
+            };
+            
+            console.log(req);
+            
+        }).then()
+*/
+    </script>
+</body>
+</html>

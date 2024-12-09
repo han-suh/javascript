@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document 실습</title>
+</head>
+<body>
+    <h1>Document 실습</h1>
+    <h2>sumUl>li의 모든 수를 더하세요.</h2>
+    <ul id="sumUl">
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>10</li>
+        <li>12</li>
+        <li>11</li>
+        <li>13</li>
+        <li>14</li>
+        <li>15</li>
+        <li>16</li>
+        <li>17</li>
+        <li>18</li>
+        <li>19</li>
+        <li>20</li>
+        <li>21</li>
+        <li>22</li>
+    </ul>
+    <script>
+        const sumUl=document.getElementById("sumUl");
+        const sumUlLis=sumUl.getElementsByTagName("li");
+        //console.log(sumUlLis);
+        // let sum=0;
+        // for(let li of sumUlLis){
+        //     let num=Number(li.innerText);
+        //     sum+=num;
+        // }
+        // console.log(sum);
+        //console.log(sumUlLis);
+        const sumUlLiArr=Array.from(sumUlLis); //HTMLColletion => Array
+        
+        //reduce((li[0],li[n])=>{})
+        //reduce((init=0,li[n])=>{},0)
+
+        let sum=sumUlLiArr.reduce((init,li)=>Number(li.innerText)+init,0)
+        //let sum=sumUlLiArr.reduce((init,li)=>Number(li.innerText)+init)//init==li
+       
+        console.log(sum);
+        
+    </script>
+    <h2>multUl>li의 모든 수를 곱하세요.</h2>
+    <ul id="multUl">
+        <li>11.1</li>
+        <li>22.2</li>
+        <li>33.3</li>
+        <li>44.4</li>
+        <li>55.5</li>
+    </ul>
+    <script>
+        const multUlLis=document.getElementById("multUl").getElementsByTagName("li");
+        const multUlLiArr=Array.from(multUlLis);
+
+        let nums=multUlLiArr.map((li)=>Number(li.innerText));
+        console.log(nums);
+        
+        sum=nums.reduce((init,num)=>init*num);
+        console.log(sum);
+        
+    </script>
+
+    <h2>filterUl>li의 수인 배열만 만드세요 [li{1},li{2},li{3},li{4},li{5}]</h2>
+    <ul id="filterUl">
+        <li>10</li>
+        <li>20</li>
+        <li>칠</li>
+        <li>30</li>
+        <li>40</li>
+        <li>팔</li>
+        <li>50</li>
+    </ul>
+    <script>
+        const filterUl=document.getElementById("filterUl");
+        const filterUlLis=Array.from(filterUl.getElementsByTagName("li"));
+        //HTTMCollection 자료가 잘 사용되지 않으니 바로 Array로 변경 후 사용
+        console.log(filterUlLis);
+        let numLis=filterUlLis.filter((li)=>!isNaN(li.innerText));
+        console.log(numLis);
+        nums=numLis.map((li)=>Number(li.innerText));
+        console.log(nums);
+        
+    </script>
+
+
+    <h3>위의 배열에서 [1,2,3,4,5]로만 된 배열을 만드세요 map</h3>
+    <script>
+      
+        
+    </script>
+
+</body>
+</html>

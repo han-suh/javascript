@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object 실습</title>
+</head>
+<body>
+    <h1>Object 실습</h1>
+    <ul>
+        <li>문제0. 변수 objB가 참조하는 객체를 만드세요. 필드 a,b,c,100이 있고 모두 수 데이터입니다.</li>
+        <li>문제1. objB 필드 c의 값을 60으로 바꾸세요</li>
+        <li>문제2. objB 필드 100의 값을 1 증가 시키세요</li>
+        <li>문제3. 리터럴 표기법으로 name, age, job 필드가 있는 객체를 생성하세요.(data는 자유)</li>
+        <li>문제4. Person type을 만들어서 name, age, job 필드가 있는 객체를 생성하세요.</li>
+    </ul>
+
+    <script>
+        let objB={a:10,"b":20,"c":30, 100:40}
+        // let objB={a:10,"b":20,"c":30, 100:40}
+        console.log(objB);
+    
+
+        objB.c=60;
+        objB["c"]=60;
+        //objB[c]=60;  X
+        console.log(objB);
+
+
+        objB[100]+=1;
+        ++objB[100];
+        //objB.100;  X
+        console.log(objB);
+
+
+        // let person={name:"name", age:"age", job:"job"}
+        // console.log(person);
+        // name => naming 바꾸면 좋겠다 (야근)
+        // 필드를 추가 (야근)
+        // 타입을 만들고 객체를 생성 => 정시 퇴근
+        
+        class Person{
+            constructor(name,age,job){
+                this.name=name;
+                this.age=age;
+                this.job=job;
+            }
+            add(a,b){return a+b;}
+            mult=function(a,b){return a*b;}
+            // function test(){}  X
+        }
+        let p=new Person("누구","10","직업");
+        let p2=new Person("누구","20","직업");
+        let p3=new Person("누구","30","직업");
+        console.log(p,p2,p3);
+        console.log(p.add(10,20),p.mult(5,7));
+
+        let person={name:"누구",age:10,job:"직업"};
+        let person2={name:"누구",age:"20",job:"직업"};
+        let person3={name:"누구",age:"30",job:"직업",add(a,b){return a+b}}; // 함수를 참조 add: f
+        let person4={name:"누구",age:"30",job:"직업",add:function(a,b){return a+b}};
+        console.log(person,person2,person3);
+        console.log(p.add(10,20),p.mult(5,7));
+        
+
+
+
+        // let objB=new Object();
+        // objB.a=10;
+        // objB.b=20;
+        // objB["b"]=20;
+        // let key="c";
+        // objB["c"]=30;
+        // let key2="100"
+        // objB["100"]=40;
+        // ++key2;
+        // console.log(objB);
+
+        // let objB={a:10,"b":20,"c":30, 100:40}
+
+        // class B{
+        //     constructor(){
+        //         this.a=10;
+        //         this.b=20;
+        //         this.c=30;
+        //         this[100]=40;
+        //     }
+        // }
+        // console.log(new B);
+
+
+        // objB.c=60;
+        // console.log(objB);
+
+
+        // objB["100"]=40;
+        // ++objB[100];
+        // console.log(objB);
+        // // objB[100]=41;
+        // // console.log(objB);
+
+
+
+        // let objC={name:"name", age:"age", job:"job"}
+        // console.log(objC);
+
+
+
+        // class Person{
+        //     constructor(){
+        //         this.name="name";
+        //         this.age="age";
+        //         this.job="job";
+        //     }
+        // }
+        // let person=new Person();
+        // console.log(person);
+
+
+
+
+
+    </script>
+    
+</body>
+</html>

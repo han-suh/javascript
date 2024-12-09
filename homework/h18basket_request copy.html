@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>장바구니 만들어보기</title>
+    <link rel="stylesheet" href="./h15style.css">
+    <style>
+        #basketEx
+        {display: none !important;} 
+    </style>
+</head>
+<body>
+    <h1>장바구니 출력합시다
+        <button id="loadBasketBtn" type="button">불러오기</button>
+    </h1>
+
+  
+    <ul id="basketList">
+        <li id="basketEx">
+            <div>
+                <img class="img" src="" alt="">
+            </div>
+            <form action="#" class="basketForm">
+                <h4 class="title"></h4>
+                <p><span class="price"></span></p>
+                <p><label><input name="cnt" type="number" min="1" max="10" value="1"></label></p>
+                <p>
+                    <input type="hidden" name="num" value="1">
+                    <input type="hidden" name="title" value="더조은컴퓨터 우유 2.3L">
+                    <input type="hidden" name="price" value="4800">
+                    <button type="submit">장바구니</button>
+                    <button type="button">바로구매</button>
+                </p>
+            </form>
+        </li>
+    </ul>
+    <div id="selectedList">
+        <h4>
+            장바구니 목록
+            <button id="moveSelectedList">접기</button>
+        </h4>
+        <table id="resultTable">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>이름</th>
+                    <th>가격</th>
+                    <th>수량</th>
+                    <th>총가격</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6">전체가격 : 
+                        <b id="totalPriceB">0</b>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- <script>
+        const resultTable=document.getElementById("resultTable");
+        const resultTableTbody=document.querySelector("#resultTable>tbody");
+        const selectedList=document.getElementById("selectedList");
+        const totalPriceB=document.getElementById("totalPriceB");
+        const basketList=document.getElementById("basketList");
+        //const basketForms=Array.from(document.getElementsByClassName("basketForm"));
+
+        
+        //console.log(basketForms);
+        //console.log(num,title,price,cnt);
+        //const totalPrice=Number(price)*Number(cnt)
+        const baskets=[];
+        class Basket{
+            constructor(eTarget){
+                this.num=eTarget.num;
+                this.title=eTarget.title;
+                this.price=eTarget.price;
+                this.cnt=eTarget.cnt;
+                // this.toprice=eTarget(Number(price)*Number(cnt));
+            }
+        }
+        console.log(Basket);
+        // baskets=new Basket
+        // baskets=["num","title","price","cnt"]
+        
+
+        
+        function basketsPrint(){
+            return ``
+        }
+
+        function basketFormsSubmitHandler(e){
+            e.preventDefault();
+            // let num=e.target.num.value
+            // console.log(num,title,price,cnt);
+            // console.log(e.target.num.value);
+            // let num=e.target.num.value
+            // let title=e.target.title.value
+            // let price=e.target.price.value
+            // let cnt=e.target.cnt.value
+            // console.log(num,title,price,cnt);
+            // 장바구니 목록을 Object의 Array로 보관하면서 table을 객체로 만들어서 출력
+            
+            let basket =new Basket(e.target);
+            baskets.push(basket);
+            resultTableTbody.innerHTML=basketsPrint();
+
+
+
+
+            // let str=`<tr>
+            //     <td>${num}</td>
+            //     <td>${title}</td>
+            //     <td>${price}</td>
+            //     <td>${cnt}</td>
+            //     <td>${Number(price)*Number(cnt)}</td>
+            //     <td>
+            //         <button>삭제</button>
+            //         </td>
+            //         </tr>`
+            // resultTableTbody.innerHTML+=str;
+
+                    
+            let totalPrices=Array.from(resultTable.querySelectorAll("tr>td:nth-child(5)"));
+            let totalPrice=totalPrices.reduce((init,td)=>{
+                return init+Number(td.innerText)
+            },0)
+            totalPriceB.innerText=totalPrice
+            console.log(totalPriceB,totalPrice);
+
+
+        }
+
+        const submitHandeler=function(e){
+            e.preventDefault();
+            //innerHTML : 문자열에서 요소를 찾아서 객체로 만들어서 출력
+            //basketCont.innerHTML+="<tr><td>"+1+"</td><td>"+"치즈"+"</td></tr>"
+            let form=this;// submit 버튼이 발생한 대상 == form
+            let num=form.num.value; //form 내부의 입력요소는 필드로 지정되어 있다.
+            let title=form.title.value;
+            let price=form.price.value;
+            let cnt=form.cnt.value;
+            totalPrice+=(cnt*price)
+            basketCont.innerHTML+=`
+            <tr>
+                <td>${num}</td>
+                <td>${title}</td>
+                <td>${price}</td>
+                <td>${cnt}</td>
+                <td>${cnt*price}</td>
+                <td><button type="button">삭제</button></td>
+            </tr>
+            `; 
+            totalPriceB.innerText=totalPrice;
+        }
+
+
+    </script> -->
+
+    <script>
+const basketForms=document.querySelectorAll(".basketForm");
+        const basketCont=document.querySelector("#basketCont");
+        const totalPriceB=document.querySelector("#totalPriceB");
+        //const : 상수를 사용하는 이유 
+        //js는 변수의 타입이 존재하지 않는다.(동적타입:변수의 타입은 존재하지만 수시로 바뀔 수 있음)
+        //타입이 명확한 언어는 불가능하다.
+        console.log(basketForms);
+        let totalPrice=0;
+        const submitHandeler=function(e){
+            e.preventDefault();
+            //innerHTML : 문자열에서 요소를 찾아서 객체로 만들어서 출력
+            //basketCont.innerHTML+="<tr><td>"+1+"</td><td>"+"치즈"+"</td></tr>"
+            let form=this;// submit 버튼이 발생한 대상 == form
+            //let num=form.num.value; //form 내부의 입력요소는 필드로 지정되어 있다.
+            let title=form.title.value;
+            let price=form.price.value;
+            let cnt=form.cnt.value;
+            totalPrice+=(cnt*price)
+            basketCont.innerHTML+=`
+            <tr>
+                <td>${num}</td>
+                <td>${title}</td>
+                <td>${price}</td>
+                <td>${cnt}</td>
+                <td>${cnt*price}</td>
+                <td><button type="button">삭제</button></td>
+            </tr>
+            `; 
+            totalPriceB.innerText=totalPrice;
+        }
+        basketForms.forEach((form,i,arr)=>{
+            form.onsubmit=submitHandeler;
+        })
+
+    </script>
+
+
+    <script>
+        const loadBasketBtn=document.getElementById("loadBasketBtn");
+        const basketEx=document.getElementById("basketEx");
+        // console.log(loadBasketBtn);
+        // console.log(basketEx);
+        
+
+        const loadBaskets=()=>{//onclick말고도 사용할 수 있는 함수의 경우 e 작성안함
+            let req=new XMLHttpRequest();
+            req.open("GET","./l18baskets.json");
+            req.send();
+            req.onload=()=>{
+                // status!==200 때 return/ status==200 때 실행
+                if(req.status!==200){
+                    alert("데이터를 불러오는데 실패")
+                    return;
+                }
+                /*
+                if(req.status===200){
+
+                }else{
+                    alert("데이터를 불러오는데 실패")
+                }*/
+
+
+                // 4.
+                let txt=req.responseText;
+                let txt=req.responseText;
+                let products=JSON.parse(req.responseText) //object
+                console.log(txt);
+                console.log(products);
+
+
+                // 5. 반복문
+                products.forEach((p) => { 
+                    console.log(p);
+
+                    // 6. 갯수 만큼 복사
+                    let ex=basketEx.cloneNode(true);
+                    console.log(ex);
+
+                    // 7. 특성 제거 - style에서 display:none 무시하기 위해
+                    ex.removeAttribute("id");
+
+                    // 8. 
+                    for(let key in p){
+
+                        // 9.
+                        let node=ex.querySelector("."+key);
+                        console.log(node);
+
+                        // 14. 처음부터 여기서 장바구니 정의하기위해 form 찾기
+                        let form=ex.querySelector(".basketForm")
+
+                        
+                        // 11. img 넣기
+                        if(key==="img[src]"){
+                            node.src=p[key];
+                        }else{
+                            
+                            // 10. null 제외하고 텍스트 입력
+                            // if(node!=null){
+                                //     node.innerText=p[key];
+                                // }
+                                
+                                // == (옵셔널) / null, img 등 빼고
+                                node?.append(document.createTextNode(p[key]));
+
+                                // 12. form 찾기 - img 일때는 찾을 필요가 없음(위치가 10번 밑으로 이동)
+                                // let input=ex.querySelector(`.basketForm[name=${key}]`);
+                                // console.log(input);
+                                //input[key].value=p[key];
+
+                                // 15. form 재정의로 다시 값 넣기
+                                form[key].value=p[key];
+                        }
+
+                        form.onsubmit=submitHandeler;
+
+                        
+                    };
+
+                    basketList.append(ex);
+                    
+                });
+
+
+                // 13. 장바구니 submit 재정의
+                // const basketForms=document.querySelectorAll(".basketForm");
+                // basketForms.forEach((form,i,arr)=>{
+                //     form.onsubmit=submitHandeler;
+                // });
+                
+               
+            };
+        }
+
+        
+
+        
+        
+        loadBasketBtn.onclick=loadBaskets;
+
+    </script>
+
+
+</body>
+</html>

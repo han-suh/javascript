@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>form 요소와 input 요소 연습</title>
+    <style>
+        .success{
+            font-style: italic ;
+            color: green;
+            font-weight: bold;
+        }
+        .error{
+            font-style: italic ;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>form 요소와 input 요소 연습</h1>
+    <ul>
+        <li>문제1. user와 id의 글자수가 맞을 때만 form.submit 을 하세요</li>
+        <li>문제2. 개발언어(language) 체크 박스를 만드세요(js, jsva, python, jsp, spring, react)</li>
+        <li>문제3. 남자(male) 여자(female) 라디오 버튼을 만드세요.(gender) </li>
+        <li>문제4. 1,2,3,4 모두 작성되면 form.submit 을 하세요</li>
+    </ul>
+
+    <form name="signupForm" action="signup.do">
+        <p>
+            <label>이름 : 
+                <input type="text" name="user" value="" placeholder="이름은 2글자 이상">
+            </label>
+        </p>
+        <p id="userHelper"> </p>
+        <p>
+            <label>아이디 : 
+                <input type="text" name="id" value="" placeholder="아이디는 4글자 이상">
+            </label>
+        </p>
+        <p id="idHelper"> </p>
+
+        
+        <h5>language</h5>
+        <p id="checkedLanguage"></p>
+            <label>
+                js: <input type="checkbox" name="language" value="js">
+            </label>
+            <label>
+                java: <input type="checkbox" name="language" value="java">
+            </label>
+            <label>
+                python: <input type="checkbox" name="language" value="python">
+            </label>
+            <label>
+                jsp: <input type="checkbox" name="language" value="jsp">
+            </label>
+            <label>
+                spring: <input type="checkbox" name="language" value="spring">
+            </label>
+            <label>
+                react: <input type="checkbox" name="language" value="react">
+            </label>
+       
+
+        <h5>gender</h5>
+        <P id="radioGender"></p>
+            <label>
+                남성: <input type="radio" name="gender" value="male">
+            </label>
+            <label>
+                여성: <input type="radio" name="gender" value="female">
+            </label>
+     
+        <p>
+            <!-- <input type="submit" value="제출버튼"> -->
+            <button name="resetbtn" type="reset">초기화</button>
+            <!-- form에 reset 이벤트가 발생하는 것 -->
+            <button type="submit">제출</button>
+            <!-- 더 선호하는 방식 -->
+        </p>
+
+    </form>
+
+    <script>
+        const signupForm=document.forms.signupForm;
+             
+        signupForm.onsubmit=function(event){
+            event.preventDefault();
+            console.log(signupForm.language); // RadioNodeList [],0,1,2
+            console.log(signupForm.gender); // RadioNodeList male, female
+            
+            // console.log(signupForm.language.checked); 배열은 객체를 바로 참조할 수 없다.
+
+            // 반복문, filter, cssSelector(!)***************
+
+
+            console.log(signupForm.user.value,signupForm.user.value.length);
+            console.log(signupForm.id.value,signupForm.id.value.length);
+            let userValLen=signupForm.user.value.length
+            let idValLen=signupForm.id.value.length
+            // if(userValLen>=2 && idValLen>=4){
+            //     signupForm.submit();
+            // }else{
+            //     alert("user는 2글자 이상, id는 4글자 이상 작성")
+            // }
+            let check=true; // ---------------
+
+            // 반복문*************
+            // let languageChecked=false; // 모두가 checked가 되어 있지 않다.
+            // for(let checked of signupForm.language){
+            //     if(checkbox.checked){
+            //         languageChecked=ture;
+            //         break; // 하나라도 체크가 된 체크박스가 있으면 for 반복문을 끝낸다
+            //     }
+            // }
+            // if(!languageChecked){
+            //     alert("사용할 수 있는 언어를 하나라도 체크하셔야 합니다")
+            //     check=false;
+            // }
+
+            // filter**************
+            // let languages=Array.from(signupForm.language)
+            // languages=languages.filter((checkbox)=>checkbox.checked)
+            // console.log(languages.length>0); // checked 되면 true 아니면 false
+            // if(!languages.length){
+                //     alert("사용할 수 있는 언어를 하나라도 체크하셔야 합니다")
+                // }
+                // cssSelector(!)**************
+                // css에서 가상요소 사용하여 checked된 걸 확인(:checked)
+                // [] == 속성선택자
+                // [name] : 속성 name이 있는 것
+                // ":" 가상 클래스 선택자로 특정 상태의 요소를 찾을 수 있다.
+                let langCheckedArr=signupForm.querySelectorAll("[name=language]:checked")
+                // ******************
+                console.log(langCheckedArr);
+                
+            // ----------------------------
+            if(userValLen<2){
+                alert("user는 2글자 이상 작성")
+                check=false;
+            }
+            if(idValLen<4){
+                alert("id는 4글자 이상 작성")
+                check=false;
+            }if(check){
+                signupForm.submit();
+            }
+
+            // *******************************
+            // 0==false
+            if(!langCheckedArr.length){
+                alert("사용할 수 있는 언어를 하나라도 체크하셔야 합니다.")
+                check=false;
+            }
+            // "" == false
+            if(!signupForm.gender.value){
+                alert("주민등록증의 성별을 선택하세요.")
+                check=false;
+            }
+            
+
+
+
+            // let check=true; // 중간에 문제가 생기면 false가 되는 filter용 boolean
+            // if(userValLen<2){
+            //     userHelper.innerText="2글자 입력하세요.";
+            //     userHelper.classList.add("error");
+            //     userHelper.classList.remove("success");
+            //     check=false;
+            // }else{
+            //     userHelper.innerText="사용가능한 이름입니다.";
+            //     userHelper.classList.add("success");
+            //     userHelper.classList.remove("error");
+            // }
+            // if(idValLen<4){
+            //     idHelper.innerText="4글자 입력하세요.";
+            //     idHelper.classList.add("error");
+            //     userHelper.classList.remove("success");
+            //     check=false;
+            // }else{
+            //     idHelper.innerText="사용가능한 아이디입니다.";
+            //     idHelper.classList.add("success");
+            //     idHelper.classList.remove("error");
+            // }
+            // if(check){
+            //     signupForm.submit();
+            // }
+        }
+        
+            
+
+
+
+    </script>
+    
+</body>
+</html>

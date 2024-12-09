@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>type과 class 그리고 객체 실습</title>
+</head>
+<body>
+    <h1>type과 class 그리고 객체 실습</h1>
+    <p>type을 정의해서 객체를 생성하고 재사용하는 객체지향 문법이라 한다.</p>
+    <ul>
+        <li>new String("안녕") , new Number(55) : 이 때 "안녕"과 55는 무엇의 무슨 값이라고 부를 수 있나요?</li>
+        <!-- "안녕"과 55는 객체의 초기값을 정의(생성자가 정의하는 객체의 초기값이다.)-->
+        <!-- 초기값 : 객체의 필드인데 최초에 정의된 것 -->
+
+        <li>자동차 클래스를 만들고 싶은데 필드로 이름(name)과 모델번호(modelNum)를 초기값으로 갖게 정의하세요.</li>
+        <code>
+            class Car{
+                constructor(){
+                    this.name="이름"
+                    this.modelNum.="g"
+                }
+            }
+        </code>
+
+        <li>자동차 클래스로 객체를 생성하고 콘솔에 출력해보세요.</li>
+        <li>
+            let car=new Car();<br>
+            console.log(new Car(car));
+        </li>
+
+        <li>자동차 클래스의 생성자에 매개변수로 이름을 받고 필드로 정의한 이름을 매개변수 값으로 바꾸세요. : 생성자로 이름의 초기값을 정의하세요.(만들때 이름이 다른차면 좋겠다.)</li>
+
+        <li>자동차 클래스를 만들 때 이름을 변경해서 생성해 보고 콘솔에 출력도 해보세요.</li>
+    </ul>
+
+    <script>
+    // 문제2, 3
+    //  ; 세미콜론 실행의 단위
+    class Car{
+        // 생성자 : constructor
+        constructor(name,modelNum){
+            this.name=name;
+            this.modelNum=modelNum;}
+        
+        move(x,y){
+            console.log("움직인다");
+        }
+        stop(){
+            console.log("멈춘다");
+            
+        }
+            
+            
+    }
+    let car=new Car();
+    console.log(new Car());
+    console.log(new Car());
+    
+    //Car을 상속 받아서 BmwCar class를 만드세요. BmwCar에 price필드를 정의하세요.
+    class BmwCar extends Car{
+
+    }
+    let bmw=new BmwCar();
+    console.log(bmw);
+    let bmw2=new BmwCar("bmw","x");
+    console.log(bmw2);
+    // 생성자를 정의하지 않으면 부모의 생성자를 호출한다.
+    // 상속받으면 상속받은 부모의 생성자도 호출된다. 자식이 생성자를 정의하지 않으면 부모의 생성자를 호출해야한다.
+    // Object 생성자도 호출된다.
+
+    class KiaCar extends Car{
+        constructor(name,modelNum,price){
+            super(name,modelNum)
+            this.price=price;
+            //super()==super(undefined,undefined)
+        }
+    }
+    // 객체를 생성할 때는 무조건(선택X) 부모생성자가 (먼저) 호출되도록 설계해야한다.
+    let kia=new KiaCar("이름","셀토스","1800");
+    console.log(kia);
+    // Object > A > B > C > D > F ....
+
+    
+
+
+
+    // class BmwCar extends Car{
+    //     constructor(name,modelNum,price){
+    //     super(name,modelNum);
+    //     this.price=price;
+    //     }            
+    // }
+
+    // console.log(new BmwCar("bmw","x90","백만원"));
+
+
+
+    // 문제4 - modelNum는 값을 정해줘야함.
+    class Car2{
+        constructor(name,modelNum){//초기값을 결정하는게 constructor
+            this.name=name;
+            this.modelNum=modelNum}
+            
+    }
+    console.log(new Car2()); //name=undefined , modelNum=undefined
+    console.log(new Car2("둘리","g90"));
+
+
+
+    
+
+
+    new Car();
+    // Car();==Car.constructor()
+    // new는 객체를 생성하는 연산자(실행 후 결과를 반환)이다. (생성 연산자-수학연산자X)
+    // = 대입 연산자 / +-
+
+
+
+
+    // class Car{ 
+    //     constructor(name, modelNum){
+    //         this.name=name
+    //         this.modelNum=modelNum
+    //     }
+
+    //     sayName(name){
+    //         return this.name + modelNum;
+    //     }
+    // }
+
+    // let c=new Car()
+    // console.log(c);
+
+    // let car=new Car("gv",12022)
+    // console.log(car);
+
+
+    // class Brand extends Car{ 
+    //     constructor(name, modelNum){
+    //         this.name=name
+    //         this.modelNum=modelNum
+    //     }
+
+    //     sayName(){
+    //     return this.name + modelNum;
+    //     }
+    // }
+
+    // function car(x){
+    //     let result=x**n
+    //     return result;
+    // }
+    
+
+
+
+
+
+    // class User{ 
+    //     constructor(){
+    //         console.log();
+    //         this.name="이름"
+    //         this.modelNum="모델번호"
+    //     }
+    // }
+    // let c=new User()
+    // console.log(c);
+
+
+    
+
+
+
+    </script>
+</body>
+</html>

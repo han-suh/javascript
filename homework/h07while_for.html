@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반복문 실습</title>
+</head>
+<body>
+    <h1>반복문을 연습해 봅시다</h1>
+
+    <script>
+        let arr=[101,10,22,44,56,210,55.3]
+        //while 반복문을 이용해서 위 배열의 모든 값을 더하세요. 
+
+        let sum=0;
+        /* let i=arr.length-1;
+
+        while(i>=0){
+            //console.log(arr[i]);
+            sum+=arr[i];
+            i--;            
+        }
+        console.log(sum);*/
+
+        for(let i=arr.length-1; i>=0; i--){
+            sum+=arr[i]
+        }
+        console.log(sum);
+        
+
+        /* let i=0;
+        let sum=null;
+        let length=arr.length
+
+        while(i<length){
+            //if(Number(arr[i]));
+            sum = sum + arr[i];
+            i++;
+            
+        }
+        console.log(sum);*/
+
+        // for(let i=0; i<arr2.length; i++){//i++은 계속 일어나야하기 때문에 ; 생략  // arr2.length - length
+        //     if(isNaN(arr2[i])) arr2.splice(i,1);
+        // }
+        // console.log("for 반복문");
+        // console.log(arr2);
+
+
+    let arr2=[101,10,"4",22,"33.33",44,56,210,55.3]
+    // for 반복문을 이용해서 위 배열의 모든 값을 더하세요.
+    // 반환값은 수로 작성하세요.
+    sum=0;
+
+    for(let f=0; f<arr2.length; f++){
+            //console.log(arr2[f]); 
+            //sum = sum + Number(arr2[f]);
+            sum+=Number(arr2[f]);
+    }
+        console.log(sum);
+        //자바스크립트는 숫자+문자열 => "문자열 +" 연산의 우선순위를 높게 잡는다. 101+10 => 숫자 101+10+4 => 문자열 시작!!
+
+    let arr3=[101,10,"삼",22,"삼십삼",44,56,210,undefined]
+    // for 반복문을 이용해서 문자열을 제외하고 위 배열의 모든 값을 더하세요.
+    // type of "삼" or 101 return("string",number()), isNaN
+
+    //let sum3=null;
+    sum=0;
+    for(let g=0; g<arr3.length; g++){
+        //console.log(arr3[g], typeof arr3[g]);
+        if(typeof arr3[g] == "number"){
+            sum+=arr3[g]
+        }    
+    }
+    console.log(sum);
+
+
+    
+    let arr4=[101,10,"삼",new Number(200), "100",22,"삼십삼",44,56,210,undefined]
+    // for 반복문을 이용해서 문자열을 제외하고 위 배열의 모든 값을 더하세요.
+    // type of "삼" or 101 return("string",number()), isNaN
+
+    //let sum3=null;
+    sum=0;
+    for(let j=0; j<arr4.length; j++){
+        // console.log(arr4[j], typeof arr4[j]);
+        // typeof new Number(200) : object   
+        if( ! isNaN(arr4[j])){// Number(arr[1]) -> NaN가 아닌 것
+            sum+=Number(arr4[j])
+        }
+    }
+    console.log(sum);
+    // ! ture => false
+    // ! false => ture
+
+
+    /* for(let g=0; g<arr3.length; g++){
+        if(isNaN(arr3[g])){
+        arr3.splice(g,1);
+        --g;
+        }
+        else {sum3 = sum3 + arr3[g];}
+        
+    }
+        console.log(sum3); */
+
+    /* let sum4=null;
+    for(let h=0; h<arr3.length; h++){
+        if(typeof(Number(arr3[h]))=='number')
+        sum4 = sum4 + arr3[h];
+    }
+    console.log(sum4); */
+
+
+    </script>
+    
+</body>
+</html>
