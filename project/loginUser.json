@@ -1,0 +1,9 @@
+{
+    "user_id":"me",
+    "name":"나",
+    "age":10,
+    "married":false,
+    "address":"서울시",
+    "phone":"010-1000-2000",
+    "email":"me@gmail.com"
+}

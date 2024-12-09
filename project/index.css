@@ -1,0 +1,19 @@
+body{
+    background-color: antiquewhite;
+    margin: 0;
+    padding: 0;
+}
+div>ul>p{
+    margin: 0;
+    padding: 0;
+}
+#productList>li{
+    display: flex;
+}
+#productList>li>div>img{
+    width: 180px;
+    height: 180px;
+}
+#productEx{
+    display: none !important;
+}
