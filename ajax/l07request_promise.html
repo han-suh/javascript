@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>통신이 완료된 시점에 다른 통신을 해보자</title>
+    <script>
+        // div 호출
+        const init=function(){
+            const productsCont=document.getElementById("productsCont");
+            const basketsCont=document.getElementById("basketsCont");
+            console.log(productsCont, basketsCont); // 위에서 선언해서 null
+            
+            
+/*            
+            // 실제 상품 불러오기
+            const productReq=new XMLHttpRequest();
+            productReq.open("GET","../homework/l18products.json");
+            productReq.send();
+        
+            
+            // 문제1. l18products.json 다 다운받고 productsCont에 출력되는 시점에 l19baskets.json 다운 받고 basketsCont를 출력
+            productReq.onload=()=>{//함수()가 아니라 함수를 재정의=
+                if(productReq.status!==200){
+                    alert("통신실패");
+                    return;
+                }
+                let productsJson=productReq.responseText;
+                    // 객체로 만들어서 출력
+                    // html 만드는 구문 생략
+                console.log(productsJson);
+                productsCont.innerText=productsJson; // 종료되는 시점
+
+
+                // 실제 장바구니 불러오기
+                    // productsCont에 출력되는 시점이 끝나는 부분으로 위치 조정
+                    // 1차원적 방법(콜백지옥-함수에함수에함수..): 종료되는 시점에 장바구니를 통신해서 스레드간 동기화
+                const basketReq=new XMLHttpRequest();
+                basketReq.open("GET","../homework/l19baskets.json");
+                basketReq.send();
+                    //지금은 동시에 출력되는 상황
+                basketReq.onload=()=>{
+                    if(basketReq.status!==200){
+                        alert("통신실패");
+                        return;
+                    };
+                    let basketsJson=basketReq.responseText;
+                    basketsCont.innerText=basketsJson;
+                };
+            };
+*/
+            // 문제2 Promise 객체로 상품이 모두 출력되는 시점을 동기화
+                // promise를 이용해 콜백지옥 벗어나기 - 대신 프로미스지옥
+            new Promise((resolve)=>{
+                const req=new XMLHttpRequest();
+                req.open("GET","../homework/l18products.json");
+                req.send();
+                req.onload=()=>{
+                    let productsJson=req.responseText;
+                    productsCont.innerText=productsJson
+                    resolve("상품 통신성공");
+                } // 따로 출력 img3
+                // resolve("상품 통신성공");
+            }).then((msg)=>{
+                // alert(msg); - 동시에 안하게 됨.. img2
+                const req=new XMLHttpRequest();
+                req.open("GET","../homework/l19baskets.json");
+                req.send();
+                req.onload=()=>{
+                    let basketsJson=req.responseText;
+                    basketsCont.innerText=basketsJson;
+                }
+            })
+
+
+
+
+
+
+
+
+
+
+        }
+
+        document.addEventListener('DOMContentLoaded',init);
+
+
+    </script>
+</head>
+<body>
+    <h1>통신이 완료된 시점에 다른 통신을 해보자</h1>
+
+    <h2>상품리스트에서 **프로그램상에서 상품(../homework/l18products.json)이 모두 출력되고나서 꼭 장바구니(../homework/l19baskets.json)가 출력되어야 오류가 없다.</h2>
+
+    <hr>
+    <div id="productsCont"></div>
+    <hr>
+    <div id="basketsCont"></div>
+
+    
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스레드간의 동기화와 promise 객체</title>
+</head>
+<body>
+    <h1>스레드간의 동기화와 promise 객체</h1>
+    <script>
+        // 스레드를 생성하는 함수
+        // setInterval(콜백함수 반복), setTimeout(), XMLHttpRequest.send()
+
+
+        // setTimeout(): 스레드간의 비동기화
+        let a=0;
+        setTimeout(()=>{ // 1초 뒤에 a를 10으로 만듦
+            a=10;
+        },1)
+        console.log(a); // 0
+            // a가 0인 이유는 스레드간의 비동기 상태가 발생했기 때문이다.
+
+        
+        // 서로 다른 스레드간의 상태를 동기화 시키는 방법은 오직 (각) 스레드가 종료되는 시점까지 기다리는 방법 뿐이다
+        // onload();
+        // Promise 객체를 사용하면 스레드의 특정 시점을 동기화(resolve)할 수 있다.
+
+
+        // **Promise 객체로 스레드간의 동기화
+            // 콜백함수가 무조건 사용되며 콜백함수를 통해 특점 시점을 동기화하는 매개변수 사용
+            // 요즘은 아무도 사용하지 않지만 알고 있어야함.
+        a=0;
+        new Promise((resolve)=>{
+            setTimeout(()=>{
+                a=100; // 값 변경으로 resolve 반드시 실행
+                resolve(); // a가 100이 되는 시점에 코드를 동기화 하겠다라는 의미
+            },1000);
+        }).then(()=>{ //resolve가 실행된 시점에 실행하겠다는 의미
+            console.log(a); // 100
+        });
+        console.log(a); // 0
+
+
+        // 스레드간의 비동기화
+        a=0;
+        setTimeout(()=>{
+            a=77;
+        },1000)
+        //alert(a); // 0
+
+
+       // 스레드간의 동기화
+        new Promise((resolve)=>{
+            setTimeout(()=>{
+                a=77;
+                resolve("성공");
+
+                a=100; // 거의 동시에 동기화되서(속도차이가 거의 없음) 77이거나 100일 수 있음.. 그런데 거의 100이 나옴
+            },1000)
+        }).then((msg)=>{
+            console.log("resolve 뒤에 a를 다시 정의한 경우 a="+a);
+            //alert(msg+" : a="+a)
+        });
+
+
+
+        // resolve 뒤에 다시 정의한 경우
+        a=0;
+        new Promise((resolve)=>{
+            setTimeout(()=>{
+                a=77;
+                resolve("성공");
+
+                setTimeout(()=>{
+                    a=100;
+                },1)
+            },2000);
+        }).then((msg)=>{
+            console.log("resolve 뒤에 setTimeout으로 a를 정의한 경우 a="+a);
+            // alert(msg+" : a="+a)
+        });
+            // then()이 콜백함수를 실행하는 시점은 이전 콜백함수에서 resolve를 실행한 시점이고 resolve에 메세지 형식의 매개변수를 then의 콜백함수로 전달할 수 있다.
+
+
+        // Promise Chaining(프로미스를 계속 연결하기)
+        a=0;
+        new Promise((resolve)=>{
+            setTimeout(()=>{
+                a=7777;
+                resolve(a);
+            },2000)
+        }).then((msg)=>{
+            console.log("msg1="+msg);
+            return new Promise((resolve)=>{
+                setTimeout(()=>{
+                    msg*=2;
+                    resolve(msg);
+                },2000)
+            });
+        }).then((msg)=>{
+            console.log("msg2="+msg);
+            return new Promise((resolve)=>{
+                setTimeout(()=>{
+                    msg/=2;
+                    resolve(msg);
+                },2000)
+            });
+        }).then((msg)=>{
+            console.log("msg3="+msg);
+            return new Promise((resolve)=>{
+                setTimeout(()=>{
+                    msg/=7;
+                    resolve(msg);
+                },2000)
+            });
+        }).then((msg)=>{
+            console.log("msg4="+msg);
+            
+        })
+
+        
+    </script>
+    
+</body>
+</html>

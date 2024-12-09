@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XMLHttpRequest와 status에 대해 알아봅시다.</title>
+</head>
+<body>
+    <h1>XMLHttpRequest와 status에 대해 알아봅시다.</h1>
+    <p><button id="memBtn">멤버json 불러오기</button></p>
+    <div id="memCont"></div>
+    <table>
+        <thead>
+            <tr>
+                <th>name</th>
+                <th>id</th>
+                <th>age</th>
+                <th>married</th>
+            </tr>
+        </thead>
+        <tbody id="memCont1">
+
+        </tbody>
+    </table>
+
+    <h2>onload와 onreadystatechange</h2>
+    <ul>
+        <li>onload : 통신이 성공한 마지막 시점에만 실행</li>
+        <li>onreadystatechange : 통신을 준비하는 단계부터 종료될 때까지 5번 실행. 하지만 콘솔에는 3번 실행됨.</li>
+            <ul>
+                <li>readyState 0 : new XMLHTTPRequest()</li>
+                <li>readyState 1 : req.open(method,url)</li>
+                <li>readyState 2 : req.send() => request 객체로 통신해서 서버에 요청</li>
+                <li>readyState 3 : 서버에서 요청하는 리소스가 있는지 응답(StatusCode)</li>
+                <li>readyState 4 : 통신성공 == onload => 응답받은 내역을 처리</li>
+            </ul>
+        <li>status code : 서버가 보내는 리소스의 상태 번호</li>
+            <ul>
+                <li>1-- (101): 웹 소켓통신, 메세지(통신을 계속 유지, 웹은 문서를 달라면 주고 통신을 끊는데 소켓통신은 전화나 채팅처럼 계속 통신을 유지하는 것)</li>
+                <!-- 라이브서버가 소켓통신하는 이유 : vs code랑 통신하고 있음. 오토 -->
+                <li>2-- (200): 찾는 리소스가 존재하고 성공적으로 보냈음.</li>
+                <li>3-- (302): 찾는 리소스가 서버 내의 다른 리소스로 이동해서 그걸 가져와서 보냈어.</li>
+                <li>4-- (404): 찾는 리소스가 없음.</li>
+                <li>5-- (500): 서버에 오류가 있어서 응답할 수 없고 찾는 리소스가 문제가 있음.</li>
+            </ul>
+        <li></li>
+    </ul>
+    <script>
+        // 멤버json 불러오기 - 304상태
+        const memBtn=document.getElementById("memBtn");
+        const memCont=document.getElementById("memCont");
+        const memCont1=document.getElementById("memCont1");
+        /*
+        memBtn.onclick=function(){ // ==  =(e)=>{}
+            // alert("??")
+            const req=new XMLHttpRequest(); // 객체 생성
+            req.open("GET","../l44members.json");
+            req.send();
+        };
+        */
+        /*
+
+        //json 출력
+        memBtn.onclick=(e)=>{
+            // alert("??")
+            const req=new XMLHttpRequest(); // 객체 생성
+            req.open("GET","../l44members.json");
+            req.onreadystatechange=(e)=>{
+                //this == req == e.target
+                console.log(e.target.response);
+            };
+            req.send(); // 통신하기 위해 스레드 생성
+        };
+
+
+        //xml로 변경
+        memBtn.onclick=(e)=>{
+            // alert("??")
+            const req=new XMLHttpRequest(); // 객체 생성
+            req.open("GET","../l44members.xml");
+            req.onreadystatechange=(e)=>{
+                //this == req == e.target
+                //reponse == 응답받은 문서
+                //json => 문자열 데이터기 때문에 바로 문자열로 출력
+                //xml => html이 xml 기반이기 때문에 
+                console.log(e.target.response);
+            };
+            req.send(); // 통신하기 위해 스레드 생성
+        };
+        */
+
+/*
+        // onreadystatechange의 4번 실행 확인
+        // readyState => 1 , 2 , 3 , 4
+        memBtn.onclick=(e)=>{
+            // alert("??")
+            const req=new XMLHttpRequest(); // 객체 생성
+            req.open("GET","../l44members.json");
+            req.onreadystatechange=(e)=>{
+                //this == req == e.target
+                //reponse == 응답받은 문서
+                //json => 문자열 데이터기 때문에 바로 문자열로 출력
+                //xml => html이 xml 기반이기 때문에 
+                
+                //console.log(req.readyState,req.status);
+                if(req.readyState===4 && req.status===200){
+                    let resp=req.responseText;
+                    console.log(resp);
+                    memCont.innerText=(resp);
+                }
+            };
+            req.send(); // 통신하기 위해 스레드 생성
+        };
+
+*/
+        //table
+        memBtn.onclick=(e)=>{
+            const req=new XMLHttpRequest(); // 객체 생성
+            req.open("GET","../l44members.json");
+            req.onreadystatechange=()=>{
+                if(req.readyState===4 && req.status===200){
+                    let mems=JSON.parse(req.responseText);
+                    console.log(mems);
+                    let str="";
+                    mems.forEach((mem)=>{
+                        str+=`
+                        <tr>
+                            <td>${mem.name}</td>
+                            <td>${mem.id}</td>
+                            <td>${mem.age}</td>
+                            <td>${mem.married?"기혼":"미혼"}</td>
+                        </tr>
+                        `;
+                        memCont1.innerHTML=str;
+                    });
+                };
+            };
+            req.send();
+        };
+
+
+
+
+
+    </script>
+    
+</body>
+</html>
